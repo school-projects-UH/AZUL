@@ -5,7 +5,25 @@
 % Los jugadores estan enumerados del 1 al 4
 
 
-% decidir el numero de fábricas
+% dado un entero decir el color que representa
+
+color(0, "amarillo").
+color(1, "rojo").
+color(2, "azul").
+color(3, "gris").
+color(4, "negro").
+
+
+% dado un color decir el identificador
+
+id_color("amarillo", 0).
+id_color("rojo", 1).
+id_color("azul", 2).
+id_color("gris", 3).
+id_color("negro", 4).
+
+
+% Decidir el numero de fabricas
 
 no_fabricas(2, 5).
 no_fabricas(3, 7).
@@ -20,8 +38,10 @@ jugador_inicial(No_jugadores, Jugador_escogido):- N is No_jugadores + 1, random(
 % sacar un azulejo al azar de la bolsa
 
 extrae_azulejo_bolsa(Bolsa_antes, Bolsa_despues, Azulejo_escogido):-
-    random(0, 5, Azulejo_escogido),
-    actualiza_bolsa(Bolsa_antes, Azulejo_escogido, Bolsa_despues).
+    random(0, 5, X),
+    color(X, Azulejo_escogido),
+    actualiza_bolsa(Bolsa_antes, X, Bolsa_despues).
+
     actualiza_bolsa([X|R], 0, [Z|R]):- Z is X - 1, Z > 0.
     actualiza_bolsa([X|R], N, [X|S]):- M is N - 1, actualiza_bolsa(R, M, S).
 
