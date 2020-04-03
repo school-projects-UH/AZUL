@@ -37,9 +37,17 @@ jugador_inicial(No_jugadores, Jugador_escogido):- N is No_jugadores + 1, random(
 
 % sacar un azulejo al azar de la bolsa
 
-% extrae_azulejo_bolsa(Bolsa, Azulejo_escogido):-
+extrae_azulejo_bolsa(Bolsa_antes, Azulejo_escogido, Bolsa_despues):-
+    escoge_azulejo_bolsa(Bolsa_antes, Id_azulejo_escogido),
+    color(Id_azulejo_escogido, Azulejo_escogido),
+    substrae_azulejo_bolsa(Bolsa_antes, Id_azulejo_escogido, Bolsa_despues).
 
-escoge_azulejo_bolsa(Bolsa, Azulejo_escogido):-
-    length(Bolsa, N),
-    random(0, N, X),
-    nth0(X, Bolsa, Azulejo_escogido).
+    substrae_azulejo_bolsa(Bolsa_antes, Idx_Azulejo, Bolsa_despues):- borra_lista(Bolsa_antes, Idx_Azulejo, Bolsa_despues).
+
+    borra_lista([_|R], 0, R).
+    borra_lista([A|R], C, [A|M]):- T is C - 1, borra_lista(R, T, M).
+
+    escoge_azulejo_bolsa(Bolsa, Azulejo_escogido):-
+        length(Bolsa, N),
+        random(0, N, Azulejo_escogido).
+
