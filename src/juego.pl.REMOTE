@@ -36,29 +36,14 @@ jugador_inicial(No_jugadores, Jugador_escogido):- N is No_jugadores + 1, random(
 
 % sacar un azulejo al azar de la bolsa
 
-extrae_azulejo_bolsa(Bolsa_antes, Azulejo_escogido, Bolsa_despues):-
-    escoge_azulejo_bolsa(Bolsa_antes, Idx_azulejo_escogido),
-    nth0(Idx_azulejo_escogido, Bolsa_antes, Azulejo_escogido),
-    substrae_azulejo_bolsa(Bolsa_antes, Idx_azulejo_escogido, Bolsa_despues).
+extrae_azulejo_bolsa(Bolsa_antes, Bolsa_despues, Azulejo_escogido):-
+    random(0, 5, X),
+    color(X, Azulejo_escogido),
+    actualiza_bolsa(Bolsa_antes, X, Bolsa_despues).
 
-    substrae_azulejo_bolsa(Bolsa_antes, Idx_Azulejo, Bolsa_despues):- borra_lista(Bolsa_antes, Idx_Azulejo, Bolsa_despues).
+    actualiza_bolsa([X|R], 0, [Z|R]):- Z is X - 1, Z > 0.
+    actualiza_bolsa([X|R], N, [X|S]):- M is N - 1, actualiza_bolsa(R, M, S).
 
-    borra_lista([_|R], 0, R).
-    borra_lista([A|R], C, [A|M]):- T is C - 1, borra_lista(R, T, M).
-
-    escoge_azulejo_bolsa(Bolsa, Azulejo_escogido):-
-        length(Bolsa, N),
-        random(0, N, Azulejo_escogido).
-
-
-% extraer 4 azulejos de la bolsa
-
-extrae_4_azulejos_bolsa(Bolsa_antes, [A1, A2, A3, A4], Bolsa_despues):-
-    extrae_azulejo_bolsa(Bolsa_antes, A1, Bd1),
-    extrae_azulejo_bolsa(Bd1, A2, Bd2),
-    extrae_azulejo_bolsa(Bd2, A3, Bd3),
-    extrae_azulejo_bolsa(Bd3, A4, Bolsa_despues).
-% mueve_azulejos_fabrica_centro(Fabrica, Centro_antes, Centro_despues) :-
 concatena([], L2, L2).
 concatena([Cabeza1|Cola1], L2, [Cabeza1|ColaR]) :- concatenar(Cola1, L2, ColaR).
 
