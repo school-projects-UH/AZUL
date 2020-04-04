@@ -4,6 +4,16 @@
 
 % Los jugadores estan enumerados del 1 al 4
 
+
+% Predicados dinamicos
+:- dynamic estado_fabricas/2,
+   estado_muro/3,
+   estado_suelo/3,
+   estado_patrones/3,
+   estado_puntuaciones/3,
+   estado_bolsa/2.
+
+
 % dado un entero decir el color que representa
 
 color(0, "amarillo").
@@ -62,7 +72,7 @@ extrae_4_azulejos_bolsa(Bolsa_antes, [A1, A2, A3, A4], Bolsa_despues):-
 concatena([], L2, L2).
 concatena([Cabeza1|Cola1], L2, [Cabeza1|ColaR]) :- concatena(Cola1, L2, ColaR).
 
-mueve_azulejos_fabrica_centro(Fabrica, Centro_antes, Centro_despues) 
+mueve_azulejos_fabrica_centro(Fabrica, Centro_antes, Centro_despues)
     :- concatena(Centro_antes, Fabrica, Centro_despues).
 
 encuentra_fabrica(Fabricas, Color, F) :-
