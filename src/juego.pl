@@ -51,6 +51,7 @@ extrae_azulejo_bolsa(Bolsa_antes, Azulejo_escogido, Bolsa_despues):-
     nth0(Idx_azulejo_escogido, Bolsa_antes, Azulejo_escogido),
     substrae_azulejo_bolsa(Bolsa_antes, Idx_azulejo_escogido, Bolsa_despues).
 
+
     substrae_azulejo_bolsa(Bolsa_antes, Idx_Azulejo, Bolsa_despues):- borra_lista(Bolsa_antes, Idx_Azulejo, Bolsa_despues).
 
     borra_lista([_|R], 0, R).
@@ -78,3 +79,12 @@ mueve_azulejos_fabrica_centro(Fabrica, Centro_antes, Centro_despues)
 encuentra_fabrica(Fabricas, Color, F) :-
     member(F, Fabricas),
     member(Color, F).
+
+llena_fabricas(Bolsa_antes, N, Fabricas, Bolsa_despues):-
+    llena_fabricas_(Bolsa_antes, N, [], Fabricas, Bolsa_despues).
+
+    llena_fabricas_(Bolsa_antes, 0, Fabricas_antes, Fabricas_antes, Bolsa_antes).
+    llena_fabricas_(Bolsa_antes, N, Fabricas_antes, Fabricas_despues, Bolsa_despues):-
+        extrae_4_azulejos_bolsa(Bolsa_antes, Azulejos_escogidos, Bolsa_intermedia),
+        M is N - 1,
+        llena_fabricas_(Bolsa_intermedia, M, [Azulejos_escogidos|Fabricas_antes], Fabricas_despues, Bolsa_despues).
