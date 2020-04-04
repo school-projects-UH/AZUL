@@ -60,7 +60,7 @@ extrae_4_azulejos_bolsa(Bolsa_antes, [A1, A2, A3, A4], Bolsa_despues):-
     extrae_azulejo_bolsa(Bd3, A4, Bolsa_despues).
 % mueve_azulejos_fabrica_centro(Fabrica, Centro_antes, Centro_despues) :-
 concatena([], L2, L2).
-concatena([Cabeza1|Cola1], L2, [Cabeza1|ColaR]) :- concatenar(Cola1, L2, ColaR).
+concatena([Cabeza1|Cola1], L2, [Cabeza1|ColaR]) :- concatena(Cola1, L2, ColaR).
 
 mueve_azulejos_fabrica_centro(Fabrica, Centro_antes, Centro_despues) 
-    :- concatena(Centro_antes, Fabrica, Centro_despues)
+    :- concatena(Centro_antes, Fabrica, Centro_despues).
