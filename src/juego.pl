@@ -7,9 +7,11 @@
 
 % Predicados dinamicos
 :- dynamic
+   cant_fabricas/1,
+   cant_jugadores/1,
    estado_bolsa/2,
-   estado_fabricas/3,
    estado_puntuaciones/3,
+   estado_fabricas/4,
    estado_muro/4,
    estado_suelo/4,
    estado_patrones/4.
@@ -33,11 +35,13 @@ extrae_azulejo_bolsa(Bolsa_antes, Azulejo_escogido, Bolsa_despues):-
     nth0(Idx_azulejo_escogido, Bolsa_antes, Azulejo_escogido),
     substrae_azulejo_bolsa(Bolsa_antes, Idx_azulejo_escogido, Bolsa_despues).
 
-
-    substrae_azulejo_bolsa(Bolsa_antes, Idx_Azulejo, Bolsa_despues):- borra_lista(Bolsa_antes, Idx_Azulejo, Bolsa_despues).
+    substrae_azulejo_bolsa(Bolsa_antes, Idx_Azulejo, Bolsa_despues):-
+        borra_lista(Bolsa_antes, Idx_Azulejo, Bolsa_despues).
 
     borra_lista([_|R], 0, R).
-    borra_lista([A|R], C, [A|M]):- T is C - 1, borra_lista(R, T, M).
+    borra_lista([A|R], C, [A|M]):-
+        T is C - 1,
+        borra_lista(R, T, M).
 
     escoge_azulejo_bolsa(Bolsa, Azulejo_escogido):-
         length(Bolsa, N),
@@ -52,15 +56,8 @@ extrae_4_azulejos_bolsa(Bolsa_antes, [A1, A2, A3, A4], Bolsa_despues):-
     extrae_azulejo_bolsa(Bd2, A3, Bd3),
     extrae_azulejo_bolsa(Bd3, A4, Bolsa_despues).
 
-concatena([], L2, L2).
-concatena([Cabeza1|Cola1], L2, [Cabeza1|ColaR]) :- concatena(Cola1, L2, ColaR).
 
-mueve_azulejos_fabrica_centro(Fabrica, Centro_antes, Centro_despues)
-    :- concatena(Centro_antes, Fabrica, Centro_despues).
-
-encuentra_fabrica(Fabricas, Color, F) :-
-    member(F, Fabricas),
-    member(Color, F).
+% Por cada fabrica, sacar 4 azulejos y colocarlos en la misma
 
 llena_fabricas(Bolsa_antes, N, Fabricas, Bolsa_despues):-
     llena_fabricas_(Bolsa_antes, N, [], Fabricas, Bolsa_despues).
@@ -70,3 +67,25 @@ llena_fabricas(Bolsa_antes, N, Fabricas, Bolsa_despues):-
         extrae_4_azulejos_bolsa(Bolsa_antes, Azulejos_escogidos, Bolsa_intermedia),
         M is N - 1,
         llena_fabricas_(Bolsa_intermedia, M, [Azulejos_escogidos|Fabricas_antes], Fabricas_despues, Bolsa_despues).
+
+
+% el primer jugador llena cada fabrica con 4 azulejos extraidos al azar
+
+mueve_azulejos_bolsa_fabrica(No_ronda, Jugador):-
+    estado_bolsa(No_ronda, Bolsa_antes),
+    cant_fabricas(CF),
+    llena_fabricas(Bolsa_antes, CF, Fabricas, Bolsa_despues),
+    retract(estado_bolsa(No_ronda, Bolsa_antes)),
+    asserta(estado_bolsa(No_ronda, Bolsa_despues)),
+    asserta(estado_fabricas(No_ronda, 1, Jugador, Fabricas)).
+
+
+concatena([], L2, L2).
+concatena([Cabeza1|Cola1], L2, [Cabeza1|ColaR]) :- concatena(Cola1, L2, ColaR).
+
+mueve_azulejos_fabrica_centro(Fabrica, Centro_antes, Centro_despues)
+    :- concatena(Centro_antes, Fabrica, Centro_despues).
+
+encuentra_fabrica(Fabricas, Color, F) :-
+    member(F, Fabricas),
+    member(Color, F).
