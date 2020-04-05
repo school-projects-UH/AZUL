@@ -14,25 +14,6 @@
    estado_suelo/4,
    estado_patrones/4.
 
-
-% dado un entero decir el color que representa
-
-color(0, "amarillo").
-color(1, "rojo").
-color(2, "azul").
-color(3, "gris").
-color(4, "negro").
-
-
-% dado un color decir el identificador
-
-id_color("amarillo", 0).
-id_color("rojo", 1).
-id_color("azul", 2).
-id_color("gris", 3).
-id_color("negro", 4).
-
-
 % Decidir el numero de fabricas
 
 no_fabricas(2, 5).
