@@ -90,16 +90,16 @@ encuentra_fabrica(Fabricas, Color, F) :-
     member(F, Fabricas),
     member(Color, F).
 
-extrae_un_azulejo_fabrica(Fabrica_antes, Azulejo_escogido, Fabrica_despues):-
+extrae_un_azulejo_fabrica(Fabrica_antes, Azulejo_escogido, Fabrica_despues) :-
     nth0(Idx_azulejo_escogido, Fabrica_antes, Azulejo_escogido),
     substrae_azulejo_fabrica(Fabrica_antes, Idx_azulejo_escogido, Fabrica_despues).
 
-    substrae_azulejo_fabrica(Fabrica_antes, Idx_Azulejo, Fabrica_despues):- borra_lista(Fabrica_antes, Idx_Azulejo, Fabrica_despues).
+    substrae_azulejo_fabrica(Fabrica_antes, Idx_Azulejo, Fabrica_despues):- 
+        borra_lista(Fabrica_antes, Idx_Azulejo, Fabrica_despues).
 
-    borra_lista([_|R], 0, R).
-    borra_lista([A|R], C, [A|M]):- T is C - 1, borra_lista(R, T, M).
+extrae_todos_azulejos_fabrica(Fabrica, Azulejo_escogido, Fabrica) :-
+    not(member(Azulejo_escogido, Fabrica)), !.
 
 extrae_todos_azulejos_fabrica(Fabrica_antes, Azulejo_escogido, Fabrica_despues) :-
-    member(Azulejo_escogido, Fabrica_antes),
-    extrae_un_azulejo_fabrica(Fabrica_antes, Azulejo_escogido, Fabrica_despues_temp),
+    extrae_un_azulejo_fabrica(Fabrica_antes, Azulejo_escogido, Fabrica_despues_temp), !,
     extrae_todos_azulejos_fabrica(Fabrica_despues_temp, Azulejo_escogido, Fabrica_despues).
