@@ -6,12 +6,13 @@
 
 
 % Predicados dinamicos
-:- dynamic estado_fabricas/2,
-   estado_muro/3,
-   estado_suelo/3,
-   estado_patrones/3,
+:- dynamic
+   estado_bolsa/2,
+   estado_fabricas/3,
    estado_puntuaciones/3,
-   estado_bolsa/2.
+   estado_muro/4,
+   estado_suelo/4,
+   estado_patrones/4.
 
 
 % dado un entero decir el color que representa
