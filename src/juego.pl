@@ -15,7 +15,8 @@
    estado_fabricas/4,
    estado_muro/3,
    estado_suelo/4,
-   estado_patrones/4.
+   estado_patrones/4,
+   cant_rondas/1.
 
 % Decidir el numero de fabricas
 
@@ -173,3 +174,4 @@ llena_bolsa():-
         llena_bolsa_color_(Bolsa_intermedia, Color, Nueva_cantidad, Bolsa_despues).
 
     introduce_azulejo_bolsa(Bolsa_antes, Azulejo, [Azulejo|Bolsa_antes]).
+% Fin de la partida
