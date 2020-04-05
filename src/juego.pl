@@ -79,12 +79,8 @@ mueve_azulejos_bolsa_fabrica(No_ronda, Jugador):-
     asserta(estado_bolsa(No_ronda, Bolsa_despues)),
     asserta(estado_fabricas(No_ronda, 1, Jugador, Fabricas)).
 
-
-concatena([], L2, L2).
-concatena([Cabeza1|Cola1], L2, [Cabeza1|ColaR]) :- concatena(Cola1, L2, ColaR).
-
 mueve_azulejos_fabrica_centro(Fabrica, Centro_antes, Centro_despues)
-    :- concatena(Centro_antes, Fabrica, Centro_despues).
+    :- append(Centro_antes, Fabrica, Centro_despues).
 
 encuentra_fabrica(Fabricas, Color, F) :-
     member(F, Fabricas),
