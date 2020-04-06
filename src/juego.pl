@@ -267,3 +267,5 @@ fin_partida(No_ronda, Termina) :-
         Otro_jugador is Jugador - 1, !,
         comprobar_filas(Otro_jugador, No_ronda, Puntos, Termina).
     comprobar_filas(_, _, _, 1) :- !.
+
+% Puntuación por ronda
