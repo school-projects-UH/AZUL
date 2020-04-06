@@ -13,7 +13,7 @@
    estado_puntuaciones/3,
    estado_fabricas/4,
    estado_muro/3,
-   estado_suelo/4,
+   estado_suelo/3,
    estado_patrones/4.
 
 % Decidir el numero de fabricas
@@ -56,6 +56,12 @@ jugador_inicial(No_jugadores, Jugador_escogido):- N is No_jugadores + 1, random(
         M is N - 1,
         asserta(estado_muro(0, J, [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]])),
         inicializar_muros(Rest_jugadores, M).
+
+    inicializar_suelos([], 0).
+    inicializar_suelos([J| Rest_jugadores], N):-
+        M is N - 1,
+        asserta(estado_suelo(0, J, [0, 0, 0, 0, 0, 0, 0])),
+        inicializar_suelos(Rest_jugadores, M).
 
 
 
