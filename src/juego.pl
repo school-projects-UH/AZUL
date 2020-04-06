@@ -26,7 +26,7 @@ no_fabricas(4, 9).
 
 % decidir el jugador inicial
 
-jugador_inicial(Jugadores, Jugador_escogido):-
+decidir_jugador_inicial(Jugadores, Jugador_escogido):-
     length(Jugadores, N),
     random(0, N, X),
     nth0(X, Jugadores, Jugador_escogido).
@@ -45,7 +45,9 @@ prepara_partida(Jugadores):-
     asserta(estado_fabricas(0, 0, "", Fabricas)),
     inicializar_muros(Jugadores, N),
     inicializar_suelos(Jugadores, N),
-    inicializar_patrones(Jugadores, N).
+    inicializar_patrones(Jugadores, N),
+    decidir_jugador_inicial(Jugadores, JI),
+    asserta(jugador_inicial(1, JI)).
 
 
     inicializar_puntuaciones([], 0).
