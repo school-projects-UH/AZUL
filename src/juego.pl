@@ -174,6 +174,8 @@ llena_bolsa():-
         llena_bolsa_color_(Bolsa_intermedia, Color, Nueva_cantidad, Bolsa_despues).
 
     introduce_azulejo_bolsa(Bolsa_antes, Azulejo, [Azulejo|Bolsa_antes]).
+
+    
 % Fin de la partida
 valor_en(Muro, I, J, Valor) :-
     Im is mod(I,5), Jm is mod(J,5),
