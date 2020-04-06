@@ -63,6 +63,14 @@ jugador_inicial(No_jugadores, Jugador_escogido):- N is No_jugadores + 1, random(
         asserta(estado_suelo(0, J, [0, 0, 0, 0, 0, 0, 0])),
         inicializar_suelos(Rest_jugadores, M).
 
+    inicializar_patrones([], 0).
+    inicializar_patrones([J| Rest_jugadores], N):-
+        M is N - 1,
+        asserta(estado_patrones(0, 0, J, [[""], ["", ""], ["", "", ""], ["", "", "", ""], ["", "", "", "", ""]])),
+        inicializar_patrones(Rest_jugadores, M).
+
+
+
 
 
 
