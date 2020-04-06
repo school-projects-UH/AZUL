@@ -9,6 +9,7 @@
 :- dynamic
    cant_fabricas/1,
    cant_jugadores/1,
+   jugador_inicial/2,
    estado_bolsa/2,
    estado_puntuaciones/3,
    estado_fabricas/4,
@@ -25,7 +26,10 @@ no_fabricas(4, 9).
 
 % decidir el jugador inicial
 
-jugador_inicial(No_jugadores, Jugador_escogido):- N is No_jugadores + 1, random(1, N, Jugador_escogido).
+jugador_inicial(Jugadores, Jugador_escogido):-
+    length(Jugadores, N),
+    random(0, N, X),
+    nth0(X, Jugadores, Jugador_escogido).
 
 
 % inicializar los estados del juego
@@ -42,6 +46,7 @@ prepara_partida(Jugadores):-
     inicializar_muros(Jugadores, N),
     inicializar_suelos(Jugadores, N),
     inicializar_patrones(Jugadores, N).
+
 
     inicializar_puntuaciones([], 0).
     inicializar_puntuaciones([J|Rest_Jugadores], N):-
