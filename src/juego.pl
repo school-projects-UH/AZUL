@@ -28,6 +28,26 @@ no_fabricas(4, 9).
 jugador_inicial(No_jugadores, Jugador_escogido):- N is No_jugadores + 1, random(1, N, Jugador_escogido).
 
 
+% inicializar los estados del juego
+
+% prepara_partida(Jugadores):-
+%    length(Jugadores, N),
+%    no_fabricas(N, CF),
+%    cant_jugadores(N),
+%    cant_fabricas(CF),
+%    llena_bolsa(),
+%    inicializar_puntuaciones(Jugadores, N),
+
+
+    inicializar_puntuaciones([], 0).
+    inicializar_puntuaciones([J|Rest_Jugadores], N):-
+        asserta(estado_puntuaciones(0, J, 0)),
+        M is N - 1,
+        inicializar_puntuaciones(Rest_Jugadores, M).
+
+
+
+
 % sacar un azulejo al azar de la bolsa
 
 extrae_azulejo_bolsa(Bolsa_antes, Azulejo_escogido, Bolsa_despues):-
