@@ -30,15 +30,18 @@ jugador_inicial(No_jugadores, Jugador_escogido):- N is No_jugadores + 1, random(
 
 % inicializar los estados del juego
 
-% prepara_partida(Jugadores):-
-%    length(Jugadores, N),
-%    no_fabricas(N, CF),
-%    cant_jugadores(N),
-%    cant_fabricas(CF),
-%    llena_bolsa(),
-%    inicializar_puntuaciones(Jugadores, N),
-%    inicializar_fabricas(CF, Fabricas),
-%    asserta(estado_fabricas(0, 0, "", Fabricas))
+prepara_partida(Jugadores):-
+    length(Jugadores, N),
+    no_fabricas(N, CF),
+    asserta(cant_jugadores(N)),
+    asserta(cant_fabricas(CF)),
+    llena_bolsa(),
+    inicializar_puntuaciones(Jugadores, N),
+    inicializar_fabricas(CF, Fabricas),
+    asserta(estado_fabricas(0, 0, "", Fabricas)),
+    inicializar_muros(Jugadores, N),
+    inicializar_suelos(Jugadores, N),
+    inicializar_patrones(Jugadores, N).
 
     inicializar_puntuaciones([], 0).
     inicializar_puntuaciones([J|Rest_Jugadores], N):-
@@ -68,14 +71,6 @@ jugador_inicial(No_jugadores, Jugador_escogido):- N is No_jugadores + 1, random(
         M is N - 1,
         asserta(estado_patrones(0, 0, J, [[""], ["", ""], ["", "", ""], ["", "", "", ""], ["", "", "", "", ""]])),
         inicializar_patrones(Rest_jugadores, M).
-
-
-
-
-
-
-
-
 
 
 % sacar un azulejo al azar de la bolsa
@@ -155,7 +150,7 @@ extrae_todos_azulejos_fabrica(Fabrica_antes, Azulejo_escogido, Fabrica_despues) 
 
 llena_bolsa():-
     llena_bolsa_(Bolsa),
-    estado_bolsa(0, Bolsa).
+    asserta(estado_bolsa(0, Bolsa)).
 
     llena_bolsa_(Bolsa):-
         llena_bolsa_color_([], "azul", 20, B1),
