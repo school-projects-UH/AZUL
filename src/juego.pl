@@ -177,6 +177,7 @@ llena_bolsa():-
 
     
 % Fin de la partida
+% Puntos Adicionales
 valor_en(Muro, I, J, Valor) :-
     Im is mod(I,5), Jm is mod(J,5),
     nth0(Im, Muro, Linea),
@@ -253,3 +254,5 @@ calcular_todos_los_puntos_adicionales() :-
         actualiza_puntuacion_adicional(Jugador, Ultima_ronda, Puntuacion_adicional),
         Otro_jugador is Jugador - 1, !,
         calcular_puntos_adicionales(Otro_jugador, Ultima_ronda).
+
+% Comprobar si la partida finalizó
