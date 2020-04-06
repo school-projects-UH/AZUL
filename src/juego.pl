@@ -177,7 +177,7 @@ llena_bolsa():-
 % Fin de la partida
 % CASO DE PRUEBA
 % [[[0,0], [0,1]], [[1,0], [1,1]]]
-muro_dummy(1, [[0, 0, 0, 0, 1], [1, 1, 1, 1, 1], [0, 1, 0, 1, 1], [0, 0, 1, 0, 1]]).
+muro_dummy(1, [[0, 0, 0, 0, 1], [1, 1, 1, 1, 1], [0, 1, 0, 1, 1], [0, 0, 1, 0, 1], [0, 0, 0, 1, 1]]).
 estado_muro(_, 1, M) :- muro_dummy(1, M).
 % CASO DE PRUEBA
 
@@ -198,8 +198,17 @@ puntua_adicional(Jugador, Ronda, Puntuacion_adicional) :-
     contar_2pts_por_colores_completos(Muro, Puntos_colores),
     Puntuacion_adicional is Puntos_horizontales + Puntos_verticales + Puntos_colores.
 
-    contar_2pts_por_colores_completos(Muro, Puntos) :-
-        member(Fila)
+    contar_2pts_por_lineas_horizontales(Muro, Puntos) :-
+        nth0(0, Muro, F0), comprobar_linea_horizontal(F0, P0),
+        nth0(1, Muro, F1), comprobar_linea_horizontal(F1, P1),
+        nth0(2, Muro, F2), comprobar_linea_horizontal(F2, P2),
+        nth0(3, Muro, F3), comprobar_linea_horizontal(F3, P3),
+        nth0(4, Muro, F4), comprobar_linea_horizontal(F4, P4),
+        Puntos is P0 + P1 + P2 + P3 + P4.
+
+    comprobar_linea_horizontal(Fila, 0) :- member(0, Fila), !.
+    comprobar_linea_horizontal(Fila, 2) :- !.
+
 
 calcular_todos_los_puntos_adicionales() :-
     cant_jugadores(Ultimo_jugador),
