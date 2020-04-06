@@ -175,6 +175,14 @@ llena_bolsa():-
 
     introduce_azulejo_bolsa(Bolsa_antes, Azulejo, [Azulejo|Bolsa_antes]).
 % Fin de la partida
+% CASO DE PRUEBA
+cant_jugadores(2).
+cant_rondas(1).
+estado_muro(_, _, [[1, 0, 1, 0, 0], [1, 1, 1, 1, 1], [1, 0, 1, 0, 1], [1, 0, 0, 1, 0], [1, 1, 0, 0, 1]]).
+estado_puntuaciones(1, 1, 1).
+estado_puntuaciones(1, 2, 2).
+% FIN DEL CASO DE PRUEBA
+
 valor_en(Muro, I, J, Valor) :-
     Im is mod(I,5), Jm is mod(J,5),
     nth0(Im, Muro, Linea),
