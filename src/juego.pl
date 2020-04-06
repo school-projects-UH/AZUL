@@ -175,9 +175,31 @@ llena_bolsa():-
 
     introduce_azulejo_bolsa(Bolsa_antes, Azulejo, [Azulejo|Bolsa_antes]).
 % Fin de la partida
+% CASO DE PRUEBA
+% [[[0,0], [0,1]], [[1,0], [1,1]]]
+muro_dummy(1, [[0, 0, 0, 0, 1], [1, 1, 1, 1, 1], [0, 1, 0, 1, 1], [0, 0, 1, 0, 1]]).
+estado_muro(_, 1, M) :- muro_dummy(1, M).
+% CASO DE PRUEBA
+
+valor_en(Muro, I, J, Valor) :-
+    nth0(I, Muro, Linea),
+    nth0(J, Linea, Valor).
+
+columna(Muro, J, [V0, V1, V2, V3, V4]) :-
+    valor_en(Muro, 0, J, V0), valor_en(Muro, 1, J, V1),
+    valor_en(Muro, 2, J, V2), valor_en(Muro, 3, J, V3),
+    valor_en(Muro, 4, J, V4).
+
 actualiza_puntuacion_adicional(Jugador, Ronda, Puntuacion_adicional).
 puntua_adicional(Jugador, Ronda, Puntuacion_adicional) :-
-    contar_2pts_por_lineas_horizontales()
+    estado_muro(Jugador, Ronda, Muro),
+    contar_2pts_por_lineas_horizontales(Muro, Puntos_horizontales),
+    contar_2pts_por_lineas_verticales(Muro, Puntos_verticales),
+    contar_2pts_por_colores_completos(Muro, Puntos_colores),
+    Puntuacion_adicional is Puntos_horizontales + Puntos_verticales + Puntos_colores.
+
+    contar_2pts_por_colores_completos(Muro, Puntos) :-
+        member(Fila)
 
 calcular_todos_los_puntos_adicionales() :-
     cant_jugadores(Ultimo_jugador),
@@ -190,5 +212,3 @@ calcular_todos_los_puntos_adicionales() :-
         actualiza_puntuacion_adicional(Jugador, Ronda, Puntuacion_adicional),
         Otro_jugador is Jugador - 1, !,
         calcular_puntos_adicionales(Otro_jugador, Ultima_ronda).
-        
-        
