@@ -175,12 +175,6 @@ llena_bolsa():-
 
     introduce_azulejo_bolsa(Bolsa_antes, Azulejo, [Azulejo|Bolsa_antes]).
 % Fin de la partida
-% CASO DE PRUEBA
-% [[[0,0], [0,1]], [[1,0], [1,1]]]
-muro_dummy(1, [[0, 0, 0, 0, 1], [1, 1, 1, 1, 1], [0, 1, 0, 1, 1], [0, 0, 1, 0, 1], [0, 0, 0, 1, 1]]).
-estado_muro(_, 1, M) :- muro_dummy(1, M).
-% CASO DE PRUEBA
-
 valor_en(Muro, I, J, Valor) :-
     nth0(I, Muro, Linea),
     nth0(J, Linea, Valor).
