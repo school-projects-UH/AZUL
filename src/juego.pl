@@ -99,3 +99,25 @@ extrae_todos_azulejos_fabrica(Fabrica, Azulejo_escogido, Fabrica) :-
 extrae_todos_azulejos_fabrica(Fabrica_antes, Azulejo_escogido, Fabrica_despues) :-
     extrae_un_azulejo_fabrica(Fabrica_antes, Azulejo_escogido, Fabrica_despues_temp), !,
     extrae_todos_azulejos_fabrica(Fabrica_despues_temp, Azulejo_escogido, Fabrica_despues).
+
+
+% llenar la bolsa con 100 azulejos al principio de la partida
+
+llena_bolsa():-
+    llena_bolsa_(Bolsa),
+    estado_bolsa(0, Bolsa).
+
+    llena_bolsa_(Bolsa):-
+        llena_bolsa_color_([], "azul", 20, B1),
+        llena_bolsa_color_(B1, "rojo", 20, B2),
+        llena_bolsa_color_(B2, "amarillo", 20, B3),
+        llena_bolsa_color_(B3, "gris", 20, B4),
+        llena_bolsa_color_(B4, "negro", 20, Bolsa).
+
+    llena_bolsa_color_(Bolsa_antes, _ , 0, Bolsa_antes).
+    llena_bolsa_color_(Bolsa_antes, Color, Cantidad, Bolsa_despues):-
+        Nueva_cantidad is Cantidad - 1,
+        introduce_azulejo_bolsa(Bolsa_antes, Color, Bolsa_intermedia),
+        llena_bolsa_color_(Bolsa_intermedia, Color, Nueva_cantidad, Bolsa_despues).
+
+    introduce_azulejo_bolsa(Bolsa_antes, Azulejo, [Azulejo|Bolsa_antes]).
