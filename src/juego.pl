@@ -12,7 +12,7 @@
    estado_bolsa/2,
    estado_puntuaciones/3,
    estado_fabricas/4,
-   estado_muro/4,
+   estado_muro/3,
    estado_suelo/4,
    estado_patrones/4.
 
@@ -45,11 +45,18 @@ jugador_inicial(No_jugadores, Jugador_escogido):- N is No_jugadores + 1, random(
         asserta(estado_puntuaciones(0, J, 0)),
         M is N - 1,
         inicializar_puntuaciones(Rest_Jugadores, M).
-    
+
     inicializar_fabricas(0, []).
     inicializar_fabricas(CF, [[]|Rest_Fabricas]):-
         M is CF - 1,
         inicializar_fabricas(M, Rest_Fabricas).
+
+    inicializar_muros([], 0).
+    inicializar_muros([J| Rest_jugadores], N):-
+        M is N - 1,
+        asserta(estado_muro(0, J, [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]])),
+        inicializar_muros(Rest_jugadores, M).
+
 
 
 
@@ -119,7 +126,7 @@ extrae_un_azulejo_fabrica(Fabrica_antes, Azulejo_escogido, Fabrica_despues) :-
     nth0(Idx_azulejo_escogido, Fabrica_antes, Azulejo_escogido),
     substrae_azulejo_fabrica(Fabrica_antes, Idx_azulejo_escogido, Fabrica_despues).
 
-    substrae_azulejo_fabrica(Fabrica_antes, Idx_Azulejo, Fabrica_despues):- 
+    substrae_azulejo_fabrica(Fabrica_antes, Idx_Azulejo, Fabrica_despues):-
         borra_lista(Fabrica_antes, Idx_Azulejo, Fabrica_despues).
 
 extrae_todos_azulejos_fabrica(Fabrica, Azulejo_escogido, Fabrica) :-
