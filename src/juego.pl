@@ -256,3 +256,21 @@ calcular_todos_los_puntos_adicionales() :-
         calcular_puntos_adicionales(Otro_jugador, Ultima_ronda).
 
 % Comprobar si la partida finalizó
+cant_jugadores(5).
+estado_muro(1, _, [[1, 0, 1, 1, 1], [0, 1, 0, 1, 0], [0, 0, 1, 0, 1], [1, 0, 0, 1, 0], [0, 1, 0, 0, 1]]).
+estado_muro(2, _, [[1, 1, 1, 1, 1], [0, 1, 0, 1, 0], [0, 0, 1, 0, 1], [1, 0, 0, 1, 0], [0, 1, 0, 0, 1]]).
+estado_muro(3, _, [[1, 1, 1, 0, 1], [0, 1, 0, 1, 0], [0, 0, 1, 0, 1], [1, 0, 0, 1, 0], [0, 1, 0, 0, 1]]).
+estado_muro(4, _, [[1, 1, 1, 0, 1], [0, 1, 0, 1, 0], [0, 0, 1, 0, 1], [1, 0, 0, 1, 0], [0, 1, 0, 0, 1]]).
+estado_muro(5, _, [[1, 0, 1, 1, 1], [0, 1, 0, 1, 0], [0, 0, 1, 0, 1], [1, 0, 0, 1, 0], [0, 1, 0, 0, 1]]).
+
+fin_partida(No_ronda, Termina) :-
+    cant_jugadores(Ultimo_jugador),
+    comprobar_filas(Ultimo_jugador, No_ronda, 0, Termina).
+
+    comprobar_filas(0, _, _, 0) :- !.
+    comprobar_filas(Jugador, No_ronda, 0, Termina) :-
+        estado_muro(Jugador, No_ronda, Muro),
+        contar_2pts_por_lineas_horizontales(Muro, Puntos),
+        Otro_jugador is Jugador - 1, !,
+        comprobar_filas(Otro_jugador, No_ronda, Puntos, Termina).
+    comprobar_filas(_, _, _, 1) :- !.
