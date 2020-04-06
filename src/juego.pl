@@ -181,16 +181,16 @@ cant_rondas(3).
 actualiza_puntuacion_adicional(Jugador, Ronda, Puntuacion_adicional).
 puntua_adicional(Jugador, Ronda, Puntuacion_adicional).
 
-calcular_todos_los_puntos_adicionales(Jugadores_analizados) :-
+calcular_todos_los_puntos_adicionales() :-
     cant_jugadores(Ultimo_jugador),
     cant_rondas(Ultima_ronda),
-    calcular_puntos_adicionales(Ultimo_jugador, Ultima_ronda, [], Jugadores_analizados).
+    calcular_puntos_adicionales(Ultimo_jugador, Ultima_ronda).
 
-    calcular_puntos_adicionales(0, _, Jugadores, Jugadores) :- !.
-    calcular_puntos_adicionales(Jugador, Ultima_ronda, Jugadores_analizados_antes, Jugadores_analizados_despues) :-
+    calcular_puntos_adicionales(0, _) :- !.
+    calcular_puntos_adicionales(Jugador, Ultima_ronda) :-
         puntua_adicional(Jugador, Ultima_ronda, Puntuacion_adicional),
         actualiza_puntuacion_adicional(Jugador, Ronda, Puntuacion_adicional),
         Otro_jugador is Jugador - 1, !,
-        calcular_puntos_adicionales(Otro_jugador, Ultima_ronda, [Jugador|Jugadores_analizados_antes], Jugadores_analizados_despues).
+        calcular_puntos_adicionales(Otro_jugador, Ultima_ronda).
         
         
