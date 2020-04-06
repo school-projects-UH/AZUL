@@ -185,7 +185,7 @@ valor_en(Muro, I, J, Valor) :-
     nth0(I, Muro, Linea),
     nth0(J, Linea, Valor).
 
-columna(Muro, J, [V0, V1, V2, V3, V4]) :-
+columna(J, Muro, [V0, V1, V2, V3, V4]) :-
     valor_en(Muro, 0, J, V0), valor_en(Muro, 1, J, V1),
     valor_en(Muro, 2, J, V2), valor_en(Muro, 3, J, V3),
     valor_en(Muro, 4, J, V4).
@@ -208,6 +208,17 @@ puntua_adicional(Jugador, Ronda, Puntuacion_adicional) :-
 
     comprobar_linea_horizontal(Fila, 0) :- member(0, Fila), !.
     comprobar_linea_horizontal(Fila, 2) :- !.
+
+    contar_7pts_por_lineas_verticales(Muro, Puntos) :-
+        columna(0, Muro, C0), comprobar_linea_vertical(C0, P0),
+        columna(1, Muro, C1), comprobar_linea_vertical(C1, P1),
+        columna(2, Muro, C2), comprobar_linea_vertical(C2, P2),
+        columna(3, Muro, C3), comprobar_linea_vertical(C3, P3),
+        columna(4, Muro, C4), comprobar_linea_vertical(C4, P4),
+        Puntos is P0 + P1 + P2 + P3 + P4.
+
+    comprobar_linea_vertical(Columna, 0) :- member(0, Columna), !.
+    comprobar_linea_vertical(Columna, 7) :- !.
 
 
 calcular_todos_los_puntos_adicionales() :-
