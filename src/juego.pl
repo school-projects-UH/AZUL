@@ -37,13 +37,22 @@ jugador_inicial(No_jugadores, Jugador_escogido):- N is No_jugadores + 1, random(
 %    cant_fabricas(CF),
 %    llena_bolsa(),
 %    inicializar_puntuaciones(Jugadores, N),
-
+%    inicializar_fabricas(CF, Fabricas),
+%    asserta(estado_fabricas(0, 0, "", Fabricas))
 
     inicializar_puntuaciones([], 0).
     inicializar_puntuaciones([J|Rest_Jugadores], N):-
         asserta(estado_puntuaciones(0, J, 0)),
         M is N - 1,
         inicializar_puntuaciones(Rest_Jugadores, M).
+    
+    inicializar_fabricas(0, []).
+    inicializar_fabricas(CF, [[]|Rest_Fabricas]):-
+        M is CF - 1,
+        inicializar_fabricas(M, Rest_Fabricas).
+
+
+
 
 
 
