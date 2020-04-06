@@ -175,11 +175,9 @@ llena_bolsa():-
 
     introduce_azulejo_bolsa(Bolsa_antes, Azulejo, [Azulejo|Bolsa_antes]).
 % Fin de la partida
-cant_jugadores(5).
-cant_rondas(3).
-
 actualiza_puntuacion_adicional(Jugador, Ronda, Puntuacion_adicional).
-puntua_adicional(Jugador, Ronda, Puntuacion_adicional).
+puntua_adicional(Jugador, Ronda, Puntuacion_adicional) :-
+    contar_2pts_por_lineas_horizontales()
 
 calcular_todos_los_puntos_adicionales() :-
     cant_jugadores(Ultimo_jugador),
