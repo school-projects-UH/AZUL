@@ -182,9 +182,9 @@ valor_en(Muro, I, J, Valor) :-
 
 columna(J, Muro, [V0, V1, V2, V3, V4]) :-
     Jm is mod(J, 5),
-    valor_en(Muro, 0, J, V0), valor_en(Muro, 1, J, V1),
-    valor_en(Muro, 2, J, V2), valor_en(Muro, 3, J, V3),
-    valor_en(Muro, 4, J, V4).
+    valor_en(Muro, 0, Jm, V0), valor_en(Muro, 1, Jm, V1),
+    valor_en(Muro, 2, Jm, V2), valor_en(Muro, 3, Jm, V3),
+    valor_en(Muro, 4, Jm, V4).
 
 colores_iguales_en_muro(I0, J0, Muro, [V0, V1, V2, V3, V4]) :-
     valor_en(Muro, I0, J0, V0), I1 is I0+1, J1 is J0+1,
@@ -193,8 +193,12 @@ colores_iguales_en_muro(I0, J0, Muro, [V0, V1, V2, V3, V4]) :-
     valor_en(Muro, I3, J3, V3), I4 is I0+4, J4 is J0+4,
     valor_en(Muro, I4, J4, V4).
 
+actualiza_puntuacion_adicional(Jugador, Ronda, Puntuacion_adicional) :-
+    estado_puntuaciones(Ronda, Jugador, Puntuacion_actual),
+    Puntuacion_final is Puntuacion_actual + Puntuacion_adicional,
+    retract(estado_puntuaciones(Ronda, Jugador, Puntuacion_actual)),
+    asserta(estado_puntuaciones(Ronda, Jugador, Puntuacion_final)).
 
-actualiza_puntuacion_adicional(Jugador, Ronda, Puntuacion_adicional).
 puntua_adicional(Jugador, Ronda, Puntuacion_adicional) :-
     estado_muro(Jugador, Ronda, Muro),
     contar_2pts_por_lineas_horizontales(Muro, Puntos_horizontales),
@@ -211,7 +215,7 @@ puntua_adicional(Jugador, Ronda, Puntuacion_adicional) :-
         Puntos is P0 + P1 + P2 + P3 + P4.
 
         comprobar_linea_horizontal(Fila, 0) :- member(0, Fila), !.
-        comprobar_linea_horizontal(Fila, 2) :- !.
+        comprobar_linea_horizontal(_, 2) :- !.
 
     contar_7pts_por_lineas_verticales(Muro, Puntos) :-
         columna(0, Muro, C0), comprobar_linea_vertical(C0, P0),
@@ -222,7 +226,7 @@ puntua_adicional(Jugador, Ronda, Puntuacion_adicional) :-
         Puntos is P0 + P1 + P2 + P3 + P4.
 
         comprobar_linea_vertical(Columna, 0) :- member(0, Columna), !.
-        comprobar_linea_vertical(Columna, 7) :- !.
+        comprobar_linea_vertical(_, 7) :- !.
 
     contar_10pts_por_colores_completos(Muro, Puntos) :-
         colores_iguales_en_muro(0, 0, Muro, C0), comprobar_color_completado(C0, P0),
@@ -233,7 +237,7 @@ puntua_adicional(Jugador, Ronda, Puntuacion_adicional) :-
         Puntos is P0 + P1 + P2 + P3 + P4.
 
         comprobar_color_completado(Colores, 0) :- member(0, Colores), !.
-        comprobar_color_completado(Colores, 10) :- !.
+        comprobar_color_completado(_, 10) :- !.
 
 
 calcular_todos_los_puntos_adicionales() :-
@@ -244,6 +248,6 @@ calcular_todos_los_puntos_adicionales() :-
     calcular_puntos_adicionales(0, _) :- !.
     calcular_puntos_adicionales(Jugador, Ultima_ronda) :-
         puntua_adicional(Jugador, Ultima_ronda, Puntuacion_adicional),
-        actualiza_puntuacion_adicional(Jugador, Ronda, Puntuacion_adicional),
+        actualiza_puntuacion_adicional(Jugador, Ultima_ronda, Puntuacion_adicional),
         Otro_jugador is Jugador - 1, !,
         calcular_puntos_adicionales(Otro_jugador, Ultima_ronda).
