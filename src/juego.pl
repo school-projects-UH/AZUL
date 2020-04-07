@@ -10,6 +10,7 @@
    cant_fabricas/1,
    cant_jugadores/1,
    jugador_inicial/2,
+   estado_tapa_caja/2,
    estado_bolsa/2,
    estado_puntuaciones/3,
    estado_fabricas/4,
@@ -85,6 +86,7 @@ prepara_partida(Jugadores):-
 % sacar un azulejo al azar de la bolsa
 
 extrae_azulejo_bolsa(Bolsa_antes, Azulejo_escogido, Bolsa_despues):-
+    quedan_azulejos_bolsa(Bolsa_antes),
     escoge_azulejo_bolsa(Bolsa_antes, Idx_azulejo_escogido),
     nth0(Idx_azulejo_escogido, Bolsa_antes, Azulejo_escogido),
     substrae_azulejo_bolsa(Bolsa_antes, Idx_azulejo_escogido, Bolsa_despues).
@@ -100,6 +102,8 @@ extrae_azulejo_bolsa(Bolsa_antes, Azulejo_escogido, Bolsa_despues):-
     escoge_azulejo_bolsa(Bolsa, Azulejo_escogido):-
         length(Bolsa, N),
         random(0, N, Azulejo_escogido).
+
+    quedan_azulejos_bolsa([_|_]).
 
 
 % extraer 4 azulejos de la bolsa
@@ -133,8 +137,21 @@ mueve_azulejos_bolsa_fabrica(No_ronda, Jugador):-
     asserta(estado_bolsa(No_ronda, Bolsa_despues)),
     asserta(estado_fabricas(No_ronda, 1, Jugador, Fabricas)).
 
+
 mueve_azulejos_fabrica_centro(Fabrica, Centro_antes, Centro_despues)
     :- append(Centro_antes, Fabrica, Centro_despues).
+
+
+mueve_azulejos_tapa_bolsa():-
+    cant_rondas(Ronda_actual),
+    estado_tapa_caja(Ronda_actual, Tapa),
+    retract(estado_tapa_caja(Ronda_actual, Tapa)),
+    asserta(estado_tapa_caja(Ronda_actual, [])),
+    estado_bolsa(Ronda_actual, Bolsa),
+    retract(estado_bolsa(Ronda_actual, Bolsa)),
+    append(Bolsa, Tapa, Nueva_bolsa),
+    asserta(estado_bolsa(Ronda_actual, Nueva_bolsa)).
+
 
 encuentra_fabrica(Fabricas, Color, F) :-
     member(F, Fabricas),
@@ -176,7 +193,7 @@ llena_bolsa():-
 
     introduce_azulejo_bolsa(Bolsa_antes, Azulejo, [Azulejo|Bolsa_antes]).
 
-    
+
 % Fin de la partida
 % Puntos Adicionales
 valor_en(Muro, I, J, Valor) :-
@@ -285,14 +302,14 @@ puntua_jugador_ronda(Jugador, No_ronda, I, J, Puntuacion) :-
         Cantidad_actual is Cantidad_antes + 1, !,
         adyacentes_izquierda(I, J1, Muro, Cantidad_actual, Cantidad_desp).
     adyacentes_izquierda(_, _, _, Cantidad, Cantidad) :- !.
-    
+
     adyacentes_derecha(_, 5, _, Cantidad, Cantidad) :- !.
     adyacentes_derecha(I, J, Muro, Cantidad_antes, Cantidad_desp) :-
         valor_en(Muro, I, J, 1), J1 is J+1,
         Cantidad_actual is Cantidad_antes + 1, !,
         adyacentes_derecha(I, J1, Muro, Cantidad_actual, Cantidad_desp).
     adyacentes_derecha(_, _, _, Cantidad, Cantidad) :- !.
-    
+
     adyacentes_arriba(-1, _, _, Cantidad, Cantidad) :- !.
     adyacentes_arriba(I, J, Muro, Cantidad_antes, Cantidad_desp) :-
         valor_en(Muro, I, J, 1), I1 is I-1,
