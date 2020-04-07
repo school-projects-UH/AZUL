@@ -269,3 +269,23 @@ fin_partida(No_ronda, Termina) :-
     comprobar_filas(_, _, _, 1) :- !.
 
 % Puntuación por ronda
+% actualiza_Muro
+
+% [[1, 1, 1, 1, 1], [0, 1, 0, 1, 0], [0, 0, 1, 0, 1], [1, 0, 0, 1, 0], [0, 1, 0, 0, 1]]
+
+puntua_jugador_ronda(Jugador, No_ronda, I, J, Puntuacion) :-
+    estado_muro(Jugador, No_ronda, Muro),
+    Fila_ant is I-1, Fila_sig is I+1, Col_ant is J-1, Col_sig is J+1,
+    adyacentes_izquierda(I, Col_ant, Muro, 0, Cant_izq),
+    adyacentes_derecha(I, Col_sig, Muro, 0, Cant_der),
+    adyacentes_arriba(Fila_ant, J, Muro, 0, Cant_arriba),
+    adyacentes_abajo(Fila_sig, J, Muro, 0, Cant_abajo),
+    Puntuacion is Cant_izq + Cant_der + Cant_arriba + Cant_abajo + 1.
+
+    adyacentes_izquierda(_, -1, _, Cantidad, Cantidad) :- !.
+    adyacentes_izquierda(I, J, Muro, Cantidad_antes, Cantidad_desp) :-
+        J1 is J-1, valor_en(Muro, I, J1, Valor), Valor == 1,
+        Cantidad_actual is Cantidad_antes + 1, !,
+        adyacentes_izquierda(I, J1, Muro, Cantidad_actual, Cantidad_desp).
+    
+    
