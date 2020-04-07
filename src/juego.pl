@@ -305,4 +305,9 @@ puntua_jugador_ronda(Jugador, No_ronda, I, J, Puntuacion) :-
         adyacentes_arriba(I1, J, Muro, Cantidad_actual, Cantidad_desp).
     adyacentes_arriba(_, _, _, Cantidad, Cantidad) :- !.
 
-    adyacentes_abajo(_, _, _, _, 0).
+    adyacentes_abajo(5, _, _, Cantidad, Cantidad) :- !.
+    adyacentes_abajo(I, J, Muro, Cantidad_antes, Cantidad_desp) :-
+        valor_en(Muro, I, J, 1), I1 is I+1,
+        Cantidad_actual is Cantidad_antes + 1, !,
+        adyacentes_abajo(I1, J, Muro, Cantidad_actual, Cantidad_desp).
+    adyacentes_abajo(_, _, _, Cantidad, Cantidad) :- !.
