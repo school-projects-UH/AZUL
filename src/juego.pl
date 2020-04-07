@@ -267,3 +267,41 @@ fin_partida(No_ronda, Termina) :-
         Otro_jugador is Jugador - 1, !,
         comprobar_filas(Otro_jugador, No_ronda, Puntos, Termina).
     comprobar_filas(_, _, _, 1) :- !.
+
+% Puntuación por ronda
+puntua_jugador_ronda(Jugador, No_ronda, I, J, Puntuacion) :-
+    estado_muro(Jugador, No_ronda, Muro),
+    I0 is I-1, I1 is I+1, J0 is J-1, J1 is J+1,
+    adyacentes_izquierda(I, J0, Muro, 0, Cant_izq),
+    adyacentes_derecha(I, J1, Muro, 0, Cant_der),
+    adyacentes_arriba(I0, J, Muro, 0, Cant_arriba),
+    adyacentes_abajo(I1, J, Muro, 0, Cant_abajo),
+    Puntuacion is Cant_izq + Cant_der + Cant_arriba + Cant_abajo + 1.
+
+    adyacentes_izquierda(_, -1, _, Cantidad, Cantidad) :- !.
+    adyacentes_izquierda(I, J, Muro, Cantidad_antes, Cantidad_desp) :-
+        valor_en(Muro, I, J, 1), J1 is J-1,
+        Cantidad_actual is Cantidad_antes + 1, !,
+        adyacentes_izquierda(I, J1, Muro, Cantidad_actual, Cantidad_desp).
+    adyacentes_izquierda(_, _, _, Cantidad, Cantidad) :- !.
+    
+    adyacentes_derecha(_, 5, _, Cantidad, Cantidad) :- !.
+    adyacentes_derecha(I, J, Muro, Cantidad_antes, Cantidad_desp) :-
+        valor_en(Muro, I, J, 1), J1 is J+1,
+        Cantidad_actual is Cantidad_antes + 1, !,
+        adyacentes_derecha(I, J1, Muro, Cantidad_actual, Cantidad_desp).
+    adyacentes_derecha(_, _, _, Cantidad, Cantidad) :- !.
+    
+    adyacentes_arriba(-1, _, _, Cantidad, Cantidad) :- !.
+    adyacentes_arriba(I, J, Muro, Cantidad_antes, Cantidad_desp) :-
+        valor_en(Muro, I, J, 1), I1 is I-1,
+        Cantidad_actual is Cantidad_antes + 1, !,
+        adyacentes_arriba(I1, J, Muro, Cantidad_actual, Cantidad_desp).
+    adyacentes_arriba(_, _, _, Cantidad, Cantidad) :- !.
+
+    adyacentes_abajo(5, _, _, Cantidad, Cantidad) :- !.
+    adyacentes_abajo(I, J, Muro, Cantidad_antes, Cantidad_desp) :-
+        valor_en(Muro, I, J, 1), I1 is I+1,
+        Cantidad_actual is Cantidad_antes + 1, !,
+        adyacentes_abajo(I1, J, Muro, Cantidad_actual, Cantidad_desp).
+    adyacentes_abajo(_, _, _, Cantidad, Cantidad) :- !.
