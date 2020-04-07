@@ -362,3 +362,64 @@ puede_poner_en_patron(No_patron, [], Muro, [Color, Cant], Azulejos_sobrantes, Es
 mueve_azulejos_a_linea_de_patron(_, [], [Color, Cant], [Color, Cant]) :- !.
 mueve_azulejos_a_linea_de_patron(No_patron, [Color, Cant_patron], [Color, Cant_azulejos], [Color, Cant_desp]) :-
     Cant_desp is Cant_patron + Cant_azulejos.
+
+
+actualiza_posicion_del_muro(I, J, Muro_viejo, I, J, Muro_nuevo) :-
+    valor_en(Muro_viejo, I, J, 0),
+    valor_en(Muro_nuevo, I, J, 1), !.
+
+actualiza_posicion_del_muro(I0, J0, Muro_viejo, _, _, Muro_nuevo) :-
+    valor_en(Muro_viejo, I0, J0, V),
+    valor_en(Muro_nuevo, I0, J0, V).
+
+nuevo_muro(Muro_viejo, I, J, Muro_nuevo) :-
+    length(Muro_nuevo, 5), nth0(0, Muro_nuevo, F0), nth0(1, Muro_nuevo, F1),
+    nth0(2, Muro_nuevo, F2), nth0(3, Muro_nuevo, F3), nth0(4, Muro_nuevo, F4),
+    length(F0, 5), length(F1, 5), length(F2, 5), length(F3, 5), length(F4, 5), 
+
+    actualiza_posicion_del_muro(0, 0, Muro_viejo, I, J, Muro_nuevo),
+    actualiza_posicion_del_muro(0, 1, Muro_viejo, I, J, Muro_nuevo), 
+    actualiza_posicion_del_muro(0, 2, Muro_viejo, I, J, Muro_nuevo), 
+    actualiza_posicion_del_muro(0, 3, Muro_viejo, I, J, Muro_nuevo), 
+    actualiza_posicion_del_muro(0, 4, Muro_viejo, I, J, Muro_nuevo),
+
+    actualiza_posicion_del_muro(1, 0, Muro_viejo, I, J, Muro_nuevo), 
+    actualiza_posicion_del_muro(1, 1, Muro_viejo, I, J, Muro_nuevo), 
+    actualiza_posicion_del_muro(1, 2, Muro_viejo, I, J, Muro_nuevo), 
+    actualiza_posicion_del_muro(1, 3, Muro_viejo, I, J, Muro_nuevo), 
+    actualiza_posicion_del_muro(1, 4, Muro_viejo, I, J, Muro_nuevo), 
+    
+    actualiza_posicion_del_muro(2, 0, Muro_viejo, I, J, Muro_nuevo),
+    actualiza_posicion_del_muro(2, 1, Muro_viejo, I, J, Muro_nuevo), 
+    actualiza_posicion_del_muro(2, 2, Muro_viejo, I, J, Muro_nuevo), 
+    actualiza_posicion_del_muro(2, 3, Muro_viejo, I, J, Muro_nuevo), 
+    actualiza_posicion_del_muro(2, 4, Muro_viejo, I, J, Muro_nuevo), 
+    
+    actualiza_posicion_del_muro(3, 0, Muro_viejo, I, J, Muro_nuevo), 
+    actualiza_posicion_del_muro(3, 1, Muro_viejo, I, J, Muro_nuevo), 
+    actualiza_posicion_del_muro(3, 2, Muro_viejo, I, J, Muro_nuevo), 
+    actualiza_posicion_del_muro(3, 3, Muro_viejo, I, J, Muro_nuevo), 
+    actualiza_posicion_del_muro(3, 4, Muro_viejo, I, J, Muro_nuevo),
+    
+    actualiza_posicion_del_muro(4, 0, Muro_viejo, I, J, Muro_nuevo),
+    actualiza_posicion_del_muro(4, 1, Muro_viejo, I, J, Muro_nuevo), 
+    actualiza_posicion_del_muro(4, 2, Muro_viejo, I, J, Muro_nuevo), 
+    actualiza_posicion_del_muro(4, 3, Muro_viejo, I, J, Muro_nuevo), 
+    actualiza_posicion_del_muro(4, 4, Muro_viejo, I, J, Muro_nuevo).
+
+actualiza_muro(Jugador, Ronda, I, J, M) :-
+    estado_muro(Jugador, Ronda, Muro),
+    I1 \= I, J1 \= J, valor_en(Muro, I1, J1, V).
+    % actualiza_muro_(Muro_viejo, I0, J0, In, Jn, Muro_nuevo) :-
+
+mover_lineas_de_patron_llenas(Jugador, Ronda) :-
+    cant_turnos(Ronda, Turno),
+    estado_patrones(Ronda, Turno, Jugador, [P1, P2, P3, P4, P5]),
+    estado_patrones(Ronda, Turno, Jugador, [P1, P2, P3, P4, P5]),
+    estado_muro(Jugador, Ronda, Muro),
+    mover_azulejo_al_muro(Muro, 1, P1, M1), 
+    mover_azulejo_al_muro(Muro, 2, M2),
+    mover_azulejo_al_muro(Muro, 3, P3, M3), mover_azulejo_al_muro(Muro, 4, P4, M4),
+    mover_azulejo_al_muro(Muro, 5, P5, M5).
+
+mover_azulejo_al_muro(Muro_antes, N, [Color, N]).
