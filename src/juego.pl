@@ -413,7 +413,7 @@ actualiza_muro(Jugador, Ronda, I, J) :-
 cant_turnos(1, 1).
 estado_patrones(1, 1, 1, [[], [azul, 2], [azul, 1],  [negro, 2], []]).
 estado_patrones(1, 1, 2, [[], [azul, 1],        [], [blanco, 4], []]).
-estado_muro(1, 1, [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]).
+estado_muro(1, 1, [[0,0,0,1,0],[0,1,1,0,1],[0,0,0,1,0],[0,0,0,0,0],[0,0,0,0,0]]).
 estado_muro(2, 1, [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]).
 % estado_puntuaciones(Ronda, Jugador, Puntuacion_actual),
 estado_puntuaciones(1, 1, 1).
@@ -422,17 +422,18 @@ estado_puntuaciones(1, 2, 1).
 mover_lineas_de_patron_llenas(Jugador, Ronda) :-
     cant_turnos(Ronda, Turno),
     estado_patrones(Ronda, Turno, Jugador, [P1A, P2A, P3A, P4A, P5A]),
-    estado_muro(Jugador, Ronda, MV1), mover_azulejo_al_muro(MV1, 1, P1A, P1D), 
-    estado_muro(Jugador, Ronda, MV2), mover_azulejo_al_muro(MV2, 2, P2A, P2D), 
-    estado_muro(Jugador, Ronda, MV3), mover_azulejo_al_muro(MV3, 3, P3A, P3D), 
-    estado_muro(Jugador, Ronda, MV4), mover_azulejo_al_muro(MV4, 4, P4A, P4D), 
-    estado_muro(Jugador, Ronda, MV5), mover_azulejo_al_muro(MV5, 5, P5A, P5D),
+    mover_azulejo_al_muro(Jugador, Ronda, 1, P1A, P1D), 
+    mover_azulejo_al_muro(Jugador, Ronda, 2, P2A, P2D), 
+    mover_azulejo_al_muro(Jugador, Ronda, 3, P3A, P3D), 
+    mover_azulejo_al_muro(Jugador, Ronda, 4, P4A, P4D), 
+    mover_azulejo_al_muro(Jugador, Ronda, 5, P5A, P5D),
     actualizar_patrones(Ronda, Turno, Jugador, [P1A, P2A, P3A, P4A, P5A], [P1D, P2D, P3D, P4D, P5D]), !.
 
-% estado_patrones(No_ronda, No_turno, Jugador, Patrones)
 actualizar_patrones(No_ronda, No_turno, Jugador, Patrones_antes, Patrones_desp) :- 
     retract(estado_patrones(No_ronda, No_turno, Jugador, Patrones_antes)),
     asserta(estado_patrones(No_ronda, No_turno, Jugador, Patrones_desp)).
 
-mover_azulejo_al_muro(Muro, N, [Color, N], []) :- !.
-mover_azulejo_al_muro(_, _, P, P).
+mover_azulejo_al_muro(Jugador, Ronda, N, [Color, N], []) :- 
+    I is N-1, posicion_del_color_en_Muro(Color, I, J),
+    actualiza_muro(Jugador, Ronda, I, J), !.
+mover_azulejo_al_muro(_, _, _, P, P).
