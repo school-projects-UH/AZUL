@@ -308,7 +308,7 @@ puntua_jugador_ronda(Jugador, No_ronda, I, J, Puntuacion) :-
     adyacentes_abajo(_, _, _, Cantidad, Cantidad) :- !.
 
 % Determinar si una fila de patron está llena
-comprobar_lines_de_patron(Jugador, Ronda).
+comprobar_lineas_de_patron(Jugador, Ronda).
 
 % llena_linea_patron_*(Linea, LLena, Color).
 llena_linea_patron_1([], 0, ninguno) :- !.
