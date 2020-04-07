@@ -412,12 +412,14 @@ actualiza_muro(Jugador, Ronda, I, J) :-
 
 cant_turnos(1, 1).
 estado_patrones(1, 1, 1, [[], [azul, 2], [azul, 1],  [negro, 2], []]).
-estado_patrones(1, 1, 2, [[], [azul, 1],        [], [blanco, 4], []]).
+estado_patrones(1, 1, 2, [[], [azul, 1],        [], [negro, 4], []]).
 estado_muro(1, 1, [[0,0,0,1,0],[0,1,1,0,1],[0,0,0,1,0],[0,0,0,0,0],[0,0,0,0,0]]).
 estado_muro(2, 1, [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]).
 % estado_puntuaciones(Ronda, Jugador, Puntuacion_actual),
 estado_puntuaciones(1, 1, 1).
 estado_puntuaciones(1, 2, 1).
+cant_jugadores(2).
+cant_rondas(1).
 
 mover_lineas_de_patron_llenas(Jugador, Ronda) :-
     cant_turnos(Ronda, Turno),
@@ -437,3 +439,17 @@ mover_azulejo_al_muro(Jugador, Ronda, N, [Color, N], []) :-
     I is N-1, posicion_del_color_en_Muro(Color, I, J),
     actualiza_muro(Jugador, Ronda, I, J), !.
 mover_azulejo_al_muro(_, _, _, P, P).
+
+alicatado_del_muro() :-
+    cant_jugadores(Ultimo_jugador),
+    cant_rondas(Ronda_actual),
+    alicatar(Ultimo_jugador, Ronda_actual),
+    retract(cant_rondas(Ronda_actual)),
+    Siguiente_ronda is Ronda_actual + 1,
+    asserta(cant_rondas(Siguiente_ronda)).
+
+    alicatar(0, _) :- !.
+    alicatar(Jugador, Ronda_actual) :-
+        mover_lineas_de_patron_llenas(Jugador, Ronda_actual),
+        Otro_jugador is Jugador - 1, !,
+        alicatar(Otro_jugador, Ronda_actual).
