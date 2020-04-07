@@ -329,11 +329,18 @@ posicion_del_color_en_Muro(Color, Fila, Columna) :-
 
 
 % puede_poner_en_patron(No_patron, Patron, Muro, Azulejos, Exceso).
-puede_poner_en_patron(No_patron, [Color_patron, Cant_patron], Muro, 
-    [Color_azulejo, Cant_azulejos], [Color_azulejo, Cant_desp]) :-
-    Color_patron == Color_azulejo, Espacio is No_patron - Cant_patron,
-    Espacio >= Cant_azulejos, I is No_patron-1, valor_en(Muro, I) 
-    Cant_desp is Espacio - Cant_azulejos.
+puede_poner_en_patron(No_patron, [Color, Cant_patron], Muro, [Color, Cant_azulejos], Azulejos_sobrantes, Espacio_sobrante) :-
+    No_patron > Cant_patron, I is No_patron - 1, 
+    posicion_del_color_en_Muro(Color, I, J), 
+    valor_en(Muro, I, J, 0), !,
+    Espacio is No_patron - Cant_patron, 
+    Azulejos_sobrantes is max(0, Cant_azulejos - Espacio),
+    Espacio_sobrante is max(0, No_patron - Cant_patron - Cant_azulejos), !.
+
+puede_poner_en_patron(No_patron, [], Muro, [Color, Cant], Azulejos_sobrantes, Espacio_sobrante) :-
+    I is No_patron - 1, posicion_del_color_en_Muro(Color, I, J),
+    valor_en(Muro, I, J, 0), Azulejos_sobrantes is max(0, Cant - No_patron),
+    Espacio_sobrante is max(0, No_patron - Cant), !.
 
 mueve_azulejos_a_linea_de_patron([]).
 
