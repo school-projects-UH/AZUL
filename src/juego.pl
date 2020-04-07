@@ -359,4 +359,6 @@ puede_poner_en_patron(No_patron, [], Muro, [Color, Cant], Azulejos_sobrantes, Es
     valor_en(Muro, I, J, 0), Azulejos_sobrantes is max(0, Cant - No_patron),
     Espacio_sobrante is max(0, No_patron - Cant), !.
 
-mueve_azulejos_a_linea_de_patron(No_patron, [Color, Cant_patron], Muro, [Color, Cant_azulejos], [Color, Cant_desp]).
+mueve_azulejos_a_linea_de_patron(_, [], [Color, Cant], [Color, Cant]) :- !.
+mueve_azulejos_a_linea_de_patron(No_patron, [Color, Cant_patron], [Color, Cant_azulejos], [Color, Cant_desp]) :-
+    Cant_desp is Cant_patron + Cant_azulejos.
