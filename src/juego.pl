@@ -16,7 +16,8 @@
    estado_muro/3,
    estado_suelo/4,
    estado_patrones/4,
-   cant_rondas/1.
+   cant_rondas/1,
+   cant_turnos/2. % cant_turnos(Ronda, Turnos)
 
 % Decidir el numero de fabricas
 
@@ -305,3 +306,25 @@ puntua_jugador_ronda(Jugador, No_ronda, I, J, Puntuacion) :-
         Cantidad_actual is Cantidad_antes + 1, !,
         adyacentes_abajo(I1, J, Muro, Cantidad_actual, Cantidad_desp).
     adyacentes_abajo(_, _, _, Cantidad, Cantidad) :- !.
+
+% Mover azulejo si una fila de patron está llena
+% mover_lineas_de_patron_llenas(Jugador, Ronda) :-
+%     cant_turnos(Ronda, Turno),
+%     estado_patrones(Ronda, Turno, Jugador, Patrones).
+
+% llena_linea_patron_*(Linea, LLena, Color).
+llena_linea_patron_1([], 0, ninguno) :- !.
+llena_linea_patron_1([Color, 1], 1, Color) :- !.
+llena_linea_patron_1([Color, _], 0, Color) :- !.
+llena_linea_patron_2([], 0, ninguno) :- !.
+llena_linea_patron_2([Color, 2], 1, Color) :- !.
+llena_linea_patron_2([Color, _], 0, Color) :- !.
+llena_linea_patron_3([], 0, ninguno) :- !.
+llena_linea_patron_3([Color, 3], 1, Color) :- !.
+llena_linea_patron_3([Color, _], 0, Color) :- !.
+llena_linea_patron_4([], 0, ninguno) :- !.
+llena_linea_patron_4([Color, 4], 1, Color) :- !.
+llena_linea_patron_4([Color, _], 0, Color) :- !.
+llena_linea_patron_5([], 0, ninguno) :- !.
+llena_linea_patron_5([Color, 5], 1, Color) :- !.
+llena_linea_patron_5([Color, _], 0, Color) :- !.
