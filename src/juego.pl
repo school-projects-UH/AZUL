@@ -307,8 +307,10 @@ puntua_jugador_ronda(Jugador, No_ronda, I, J, Puntuacion) :-
         adyacentes_abajo(I1, J, Muro, Cantidad_actual, Cantidad_desp).
     adyacentes_abajo(_, _, _, Cantidad, Cantidad) :- !.
 
-% Determinar si una fila de patron está llena
-comprobar_lineas_de_patron(Jugador, Ronda).
+% Mover azulejo si una fila de patron está llena
+% mover_lineas_de_patron_llenas(Jugador, Ronda) :-
+%     cant_turnos(Ronda, Turno),
+%     estado_patrones(Ronda, Turno, Jugador, Patrones).
 
 % llena_linea_patron_*(Linea, LLena, Color).
 llena_linea_patron_1([], 0, ninguno) :- !.
