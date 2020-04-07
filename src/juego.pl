@@ -16,7 +16,8 @@
    estado_muro/3,
    estado_suelo/4,
    estado_patrones/4,
-   cant_rondas/1.
+   cant_rondas/1,
+   cant_turnos/2. % cant_turnos(Ronda, Turnos)
 
 % Decidir el numero de fabricas
 
@@ -307,6 +308,8 @@ puntua_jugador_ronda(Jugador, No_ronda, I, J, Puntuacion) :-
     adyacentes_abajo(_, _, _, Cantidad, Cantidad) :- !.
 
 % Determinar si una fila de patron está llena
+comprobar_lines_de_patron(Jugador, Ronda).
+
 % llena_linea_patron_*(Linea, LLena, Color).
 llena_linea_patron_1([], 0, ninguno) :- !.
 llena_linea_patron_1([Color, 1], 1, Color) :- !.
