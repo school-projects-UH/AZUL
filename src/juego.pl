@@ -402,16 +402,22 @@ nuevo_muro(Muro_viejo, I, J, Muro_nuevo) :-
     actualiza_posicion_del_muro(4, 3, Muro_viejo, I, J, Muro_nuevo), 
     actualiza_posicion_del_muro(4, 4, Muro_viejo, I, J, Muro_nuevo).
 
-% actualiza_muro(Jugador, Ronda, I, J) :-
-%     estado_muro(Jugador, Ronda, Muro_viejo),
-%     nuevo_muro(Muro_viejo, I, J, ).
-    % actualiza_muro_(Muro_viejo, I0, J0, In, Jn, Muro_nuevo) :-
+actualiza_muro(Jugador, Ronda, I, J) :-
+    estado_muro(Jugador, Ronda, Muro_viejo),
+    nuevo_muro(Muro_viejo, I, J, Muro_nuevo),
+    retract(estado_muro(Jugador, Ronda, Muro_viejo)),
+    asserta(estado_muro(Jugador, Ronda, Muro_nuevo)),
+    puntua_jugador_ronda(Jugador, Ronda, I, J, P),
+    actualiza_puntuacion_adicional(Jugador, Ronda, P).
 
 cant_turnos(1, 1).
 estado_patrones(1, 1, 1, [[], [azul, 2], [azul, 1],  [negro, 2], []]).
 estado_patrones(1, 1, 2, [[], [azul, 1],        [], [blanco, 4], []]).
 estado_muro(1, 1, [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]).
 estado_muro(2, 1, [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]).
+% estado_puntuaciones(Ronda, Jugador, Puntuacion_actual),
+estado_puntuaciones(1, 1, 1).
+estado_puntuaciones(1, 2, 1).
 
 mover_lineas_de_patron_llenas(Jugador, Ronda) :-
     cant_turnos(Ronda, Turno),
