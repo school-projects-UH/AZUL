@@ -10,6 +10,7 @@
    cant_fabricas/1,
    cant_jugadores/1,
    jugador_inicial/2,
+   estado_tapa_caja/2,
    estado_bolsa/2,
    estado_puntuaciones/3,
    estado_fabricas/4,
@@ -136,8 +137,21 @@ mueve_azulejos_bolsa_fabrica(No_ronda, Jugador):-
     asserta(estado_bolsa(No_ronda, Bolsa_despues)),
     asserta(estado_fabricas(No_ronda, 1, Jugador, Fabricas)).
 
+
 mueve_azulejos_fabrica_centro(Fabrica, Centro_antes, Centro_despues)
     :- append(Centro_antes, Fabrica, Centro_despues).
+
+
+mueve_azulejos_tapa_bolsa():-
+    cant_rondas(Ronda_actual),
+    estado_tapa_caja(Ronda_actual, Tapa),
+    retract(estado_tapa_caja(Ronda_actual, Tapa)),
+    asserta(estado_tapa_caja(Ronda_actual, [])),
+    estado_bolsa(Ronda_actual, Bolsa),
+    retract(estado_bolsa(Ronda_actual, Bolsa)),
+    append(Bolsa, Tapa, Nueva_bolsa),
+    asserta(estado_bolsa(Ronda_actual, Nueva_bolsa)).
+
 
 encuentra_fabrica(Fabricas, Color, F) :-
     member(F, Fabricas),
