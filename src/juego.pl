@@ -410,17 +410,6 @@ actualiza_muro(Jugador, Ronda, I, J) :-
     puntua_jugador_ronda(Jugador, Ronda, I, J, P),
     actualiza_puntuacion_adicional(Jugador, Ronda, P).
 
-cant_turnos(1, 1).
-estado_patrones(1, 1, 1, [[], [azul, 2], [azul, 1],  [negro, 2], []]).
-estado_patrones(1, 1, 2, [[], [azul, 1],        [], [negro, 4], []]).
-estado_muro(1, 1, [[0,0,0,1,0],[0,1,1,0,1],[0,0,0,1,0],[0,0,0,0,0],[0,0,0,0,0]]).
-estado_muro(2, 1, [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]).
-% estado_puntuaciones(Ronda, Jugador, Puntuacion_actual),
-estado_puntuaciones(1, 1, 1).
-estado_puntuaciones(1, 2, 1).
-cant_jugadores(2).
-cant_rondas(1).
-
 mover_lineas_de_patron_llenas(Jugador, Ronda) :-
     cant_turnos(Ronda, Turno),
     estado_patrones(Ronda, Turno, Jugador, [P1A, P2A, P3A, P4A, P5A]),
