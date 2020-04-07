@@ -312,19 +312,7 @@ puntua_jugador_ronda(Jugador, No_ronda, I, J, Puntuacion) :-
 %     cant_turnos(Ronda, Turno),
 %     estado_patrones(Ronda, Turno, Jugador, Patrones).
 
-% llena_linea_patron_*(Linea, LLena, Color).
-llena_linea_patron_1([], 0, ninguno) :- !.
-llena_linea_patron_1([Color, 1], 1, Color) :- !.
-llena_linea_patron_1([Color, _], 0, Color) :- !.
-llena_linea_patron_2([], 0, ninguno) :- !.
-llena_linea_patron_2([Color, 2], 1, Color) :- !.
-llena_linea_patron_2([Color, _], 0, Color) :- !.
-llena_linea_patron_3([], 0, ninguno) :- !.
-llena_linea_patron_3([Color, 3], 1, Color) :- !.
-llena_linea_patron_3([Color, _], 0, Color) :- !.
-llena_linea_patron_4([], 0, ninguno) :- !.
-llena_linea_patron_4([Color, 4], 1, Color) :- !.
-llena_linea_patron_4([Color, _], 0, Color) :- !.
-llena_linea_patron_5([], 0, ninguno) :- !.
-llena_linea_patron_5([Color, 5], 1, Color) :- !.
-llena_linea_patron_5([Color, _], 0, Color) :- !.
+% llena_linea_patron(No_patron, Linea, LLena, Color).
+llena_linea_patron(_, [], 0, ninguno) :- !.
+llena_linea_patron(N, [Color, N], 1, Color) :- !.
+llena_linea_patron(_, [Color, _], 0, Color) :- !.
