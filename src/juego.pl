@@ -316,3 +316,24 @@ puntua_jugador_ronda(Jugador, No_ronda, I, J, Puntuacion) :-
 llena_linea_patron(_, [], 0, ninguno) :- !.
 llena_linea_patron(N, [Color, N], 1, Color) :- !.
 llena_linea_patron(_, [Color, _], 0, Color) :- !.
+
+% 0-azul, 1-rojo, 2-azul, 3-gris, 4-negro
+posicion_del_color_en_Muro(amarillo, 0, 0) :- !.
+posicion_del_color_en_Muro(rojo, 0, 1) :- !.
+posicion_del_color_en_Muro(azul, 0, 2) :- !.
+posicion_del_color_en_Muro(gris, 0, 3) :- !.
+posicion_del_color_en_Muro(negro, 0, 4) :- !.
+posicion_del_color_en_Muro(Color, Fila, Columna) :-
+    posicion_del_color_en_Muro(Color, 0, C1), !,
+    Pos is C1 + Fila, Columna is mod(Pos, 5).
+
+
+% puede_poner_en_patron(No_patron, Patron, Muro, Azulejos, Exceso).
+puede_poner_en_patron(No_patron, [Color_patron, Cant_patron], Muro, 
+    [Color_azulejo, Cant_azulejos], [Color_azulejo, Cant_desp]) :-
+    Color_patron == Color_azulejo, Espacio is No_patron - Cant_patron,
+    Espacio >= Cant_azulejos, I is No_patron-1, valor_en(Muro, I) 
+    Cant_desp is Espacio - Cant_azulejos.
+
+mueve_azulejos_a_linea_de_patron([]).
+
