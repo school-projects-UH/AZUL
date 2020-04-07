@@ -85,6 +85,7 @@ prepara_partida(Jugadores):-
 % sacar un azulejo al azar de la bolsa
 
 extrae_azulejo_bolsa(Bolsa_antes, Azulejo_escogido, Bolsa_despues):-
+    quedan_azulejos_bolsa(Bolsa_antes),
     escoge_azulejo_bolsa(Bolsa_antes, Idx_azulejo_escogido),
     nth0(Idx_azulejo_escogido, Bolsa_antes, Azulejo_escogido),
     substrae_azulejo_bolsa(Bolsa_antes, Idx_azulejo_escogido, Bolsa_despues).
