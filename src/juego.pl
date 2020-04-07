@@ -269,12 +269,6 @@ fin_partida(No_ronda, Termina) :-
     comprobar_filas(_, _, _, 1) :- !.
 
 % Puntuación por ronda
-% actualiza_Muro
-
-% [[1, 1, 1, 1, 1], [0, 1, 0, 1, 0], [0, 0, 1, 0, 1], [1, 0, 0, 1, 0], [0, 1, 0, 0, 1]]
-
-estado_muro(_,_, [[0, 0, 0, 0, 1], [1, 1, 1, 1, 1], [0, 1, 0, 1, 1], [0, 0, 1, 0, 1], [0, 0, 0, 1, 1]]).
-
 puntua_jugador_ronda(Jugador, No_ronda, I, J, Puntuacion) :-
     estado_muro(Jugador, No_ronda, Muro),
     I0 is I-1, I1 is I+1, J0 is J-1, J1 is J+1,
