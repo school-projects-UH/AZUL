@@ -277,11 +277,11 @@ estado_muro(_,_, [[0, 0, 0, 0, 1], [1, 1, 1, 1, 1], [0, 1, 0, 1, 1], [0, 0, 1, 0
 
 puntua_jugador_ronda(Jugador, No_ronda, I, J, Puntuacion) :-
     estado_muro(Jugador, No_ronda, Muro),
-    Fila_ant is I-1, Fila_sig is I+1, Col_ant is J-1, Col_sig is J+1,
-    adyacentes_izquierda(I, Col_ant, Muro, 0, Cant_izq),
-    adyacentes_derecha(I, Col_sig, Muro, 0, Cant_der),
-    adyacentes_arriba(Fila_ant, J, Muro, 0, Cant_arriba),
-    adyacentes_abajo(Fila_sig, J, Muro, 0, Cant_abajo),
+    I0 is I-1, I1 is I+1, J0 is J-1, J1 is J+1,
+    adyacentes_izquierda(I, J0, Muro, 0, Cant_izq),
+    adyacentes_derecha(I, J1, Muro, 0, Cant_der),
+    adyacentes_arriba(I0, J, Muro, 0, Cant_arriba),
+    adyacentes_abajo(I1, J, Muro, 0, Cant_abajo),
     Puntuacion is Cant_izq + Cant_der + Cant_arriba + Cant_abajo + 1.
 
     adyacentes_izquierda(_, -1, _, Cantidad, Cantidad) :- !.
@@ -291,6 +291,13 @@ puntua_jugador_ronda(Jugador, No_ronda, I, J, Puntuacion) :-
         adyacentes_izquierda(I, J1, Muro, Cantidad_actual, Cantidad_desp).
     adyacentes_izquierda(_, _, _, Cantidad, Cantidad) :- !.
     
-    adyacentes_derecha(_, _, _, _, 0).
+    adyacentes_derecha(_, 5, _, Cantidad, Cantidad) :- !.
+    adyacentes_derecha(I, J, Muro, Cantidad_antes, Cantidad_desp) :-
+        valor_en(Muro, I, J, 1), J1 is J+1,
+        Cantidad_actual is Cantidad_antes + 1, !,
+        adyacentes_derecha(I, J1, Muro, Cantidad_actual, Cantidad_desp).
+    adyacentes_derecha(_, _, _, Cantidad, Cantidad) :- !.
+    
+
     adyacentes_arriba(_, _, _, _, 0).
     adyacentes_abajo(_, _, _, _, 0).
