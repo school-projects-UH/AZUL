@@ -60,9 +60,9 @@ llenar_todas_las_fabricas() :-
 
 iniciar_juego(Cant_jugadores) :-
     prepara_partida(Cant_jugadores).
-    % jugar(0),
-    % calcular_todos_los_puntos_adicionales(),
-    % determinar_ganadores().
+    jugar(0),
+    calcular_todos_los_puntos_adicionales(),
+    determinar_ganadores(),
     !.
 
         % jugar(Termino_la_partida)
@@ -71,16 +71,14 @@ iniciar_juego(Cant_jugadores) :-
             ofertas_de_factoria(),
             alicatado_del_muro(),
             prepara_siguente_ronda(),
-            fin_partida(Termina),
-            jugar(Termina).
+            fin_partida(Termina), !,
+            jugar(Termina), 
+            !.
         
-        % Poner la lógica de la fase de ofertas de factoria
+        % Poner la lógica de la fase de ofertas de factoria como objetivo de este predicado
         ofertas_de_factoria().
         prepara_siguente_ronda() :-
-            retract(estado_fabricas(Fabricas)),
-            inicializar_fabricas(Fabricas),
-            asserta(estado_fabricas(Fabricas)).
-
+            llenar_todas_las_fabricas().
 
 % decidir el jugador inicial
 
