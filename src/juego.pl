@@ -5,17 +5,17 @@
 % Los jugadores estan enumerados del 1 al 4
 
 % TEST CASE
- estado_muro(Tony, [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]]).
- estado_muro(Gilberto, [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]]).
+ % estado_muro(Tony, [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]]).
+ % estado_muro(Gilberto, [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]]).
  % cant_jugadores(2).
  % estado_puntuaciones(1, 0).
  % estado_puntuaciones(2, 0).
  % cant_rondas(1).
- estado_patrones(Tony, [[], [negro, 2], [azul, 1], [], []]).
- estado_patrones(Tony, [[azul, 1], [], [gris, 1], [], []]).
- estado_suelo(Tony, 0).
- estado_suelo(Gilberto, 0).
- estado_tapa_caja([]).
+ % estado_patrones(Tony, [[], [negro, 2], [azul, 1], [], []]).
+ % estado_patrones(Tony, [[azul, 1], [], [gris, 1], [], []]).
+ % estado_suelo(Tony, 0).
+ % estado_suelo(Gilberto, 0).
+ % estado_tapa_caja([]).
 
 % Predicados dinamicos
 :- dynamic
@@ -573,12 +573,8 @@ coloca_azulejos_patron(Jugador, No_patron, Color, Cantidad):-
     nth1(No_patron, Patrones, Patron),
     puede_poner_en_patron(No_patron, Patron, Muro, [Color, Cantidad], AS, _),
     Cantidad_a_poner is Cantidad - AS,
-    print("Hello"), nl(),
-
     mueve_azulejos_a_linea_de_patron(Patron, [Color, Cantidad_a_poner], Patron_modificado),
-    print("AAA"), print(Patron_modificado), nl(),
     reemplaza_un_patron(Jugador, No_patron, Patron_modificado),
-    print("BBB"),
     actualiza_suelo(Jugador, AS, _),
     llena_tapa_caja_color(Color, AS).
 
@@ -590,9 +586,7 @@ reemplaza_un_patron(Jugador, 2, PR):-
     retract(estado_patrones(Jugador, [P1, _, P3, P4, P5])),
     asserta(estado_patrones(Jugador, [P1, PR, P3, P4, P5])).
 reemplaza_un_patron(Jugador, 3, PR):-
-    print("RRRRR"),
     retract(estado_patrones(Jugador, [P1, P2, _, P4, P5])),
-    print("SSSS"),
     asserta(estado_patrones(Jugador, [P1, P2, PR, P4, P5])).
 reemplaza_un_patron(Jugador, 4, PR):-
     retract(estado_patrones(Jugador, [P1, P2, P3, _, P5])),
@@ -621,10 +615,3 @@ llena_tapa_caja_color(Color, Cantidad):-
     llena_bolsa_color_(Tapa_caja, Color, Cantidad, Tapa_despues),
     retract(estado_tapa_caja(Tapa_caja)),
     asserta(estado_tapa_caja(Tapa_despues)).
-
-
-test():-
-    coloca_azulejos_patron(Tony, 3, azul, 3),
-    estado_patrones(Tony, Patrones), print(Patrones), nl(),
-    estado_suelo(Tony, Suelo),       print(Suelo), nl(),
-    estado_tapa_caja(Tapa_caja),  print(Tapa_caja), nl().
