@@ -82,14 +82,14 @@ iniciar_juego(Cant_jugadores) :-
         
         % TEST CASE para determinar_ganadores
         % Tres empates
-        cant_jugadores(2).
+        cant_jugadores(4).
         estado_puntuaciones(1, 2).
-        estado_puntuaciones(2, 2).
-        estado_puntuaciones(3, 1).
-        estado_puntuaciones(4, 1).
-        estado_muro(1, [[0, 0, 0, 0, 1], [1, 1, 1, 1, 1], [0, 1, 0, 1, 1], [0, 0, 1, 0, 1], [0, 0, 0, 1, 1]]).
+        estado_puntuaciones(2, 1).
+        estado_puntuaciones(3, 2).
+        estado_puntuaciones(4, 2).
+        estado_muro(1, [[0, 0, 0, 0, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [0, 0, 1, 0, 1], [0, 0, 0, 1, 1]]).
         estado_muro(2, [[0, 0, 0, 0, 1], [1, 1, 1, 1, 1], [0, 1, 0, 1, 1], [0, 0, 1, 0, 1], [0, 0, 0, 1, 1]]).
-        estado_muro(3, [[0, 0, 0, 0, 1], [1, 1, 0, 1, 1], [0, 1, 0, 1, 1], [0, 0, 1, 0, 1], [0, 0, 0, 1, 1]]).
+        estado_muro(3, [[0, 0, 0, 0, 1], [1, 1, 1, 1, 1], [0, 1, 0, 1, 1], [0, 0, 1, 0, 1], [0, 0, 0, 1, 1]]).
         estado_muro(4, [[0, 0, 0, 0, 1], [1, 1, 1, 1, 1], [0, 1, 0, 1, 1], [0, 0, 1, 0, 1], [0, 0, 0, 1, 1]]).
 
         determinar_ganadores(Ganadores) :-
