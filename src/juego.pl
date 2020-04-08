@@ -14,15 +14,7 @@
 % estado_patrones(1, [[], [negro, 2], [azul, 1], [], []]).
 % estado_patrones(2, [[azul, 1], [], [gris, 1], [], []]).
 % estado_tapa_caja([gris]).
-
-% identificar_jugadores(Cant_jugadores, Lista_identificadores)
-identificar_jugadores(2, [1, 2]).
-identificar_jugadores(3, [1, 2, 3]).
-identificar_jugadores(4, [1, 2, 3, 4]).
-
-iniciar_juego(Cant_jugadores) :-
-    prepara_partida(Cant_jugadores), !.
-    
+  
 % Predicados dinamicos
 :- dynamic
    mejor_solucion/1,
@@ -45,6 +37,33 @@ no_fabricas(2, 5).
 no_fabricas(3, 7).
 no_fabricas(4, 9).
 
+% identificar_jugadores(Cant_jugadores, Lista_identificadores)
+identificar_jugadores(2, [1, 2]).
+identificar_jugadores(3, [1, 2, 3]).
+identificar_jugadores(4, [1, 2, 3, 4]).
+
+iniciar_juego(Cant_jugadores) :-
+    prepara_partida(Cant_jugadores), !.
+    % jugar(0),
+    % calcular_todos_los_puntos_adicionales(),
+    % determinar_ganadores().
+
+        % jugar(Termino_la_partida)
+        jugar(1) :- !.
+        jugar(0) :-
+            ofertas_de_factoria(),
+            alicatado_del_muro(),
+            prepara_siguente_ronda(),
+            fin_partida(Termina),
+            jugar(Termina).
+        
+        % Poner la lógica de la fase de ofertas de factoria
+        ofertas_de_factoria().
+        prepara_siguente_ronda() :-
+            retract(estado_fabricas(Fabricas)),
+            inicializar_fabricas(Fabricas),
+            asserta(estado_fabricas(Fabricas)).
+
 
 % decidir el jugador inicial
 
@@ -63,7 +82,7 @@ prepara_partida(N):-
     asserta(cant_fabricas(CF)),
     llena_bolsa(),
     inicializar_puntuaciones(Jugadores),
-    inicializar_fabricas(CF, Fabricas),
+    inicializar_fabricas(Fabricas),
     asserta(estado_fabricas(Fabricas)),
     inicializar_muros(Jugadores, N),
     inicializar_suelos(Jugadores, N),
@@ -74,25 +93,17 @@ prepara_partida(N):-
     % Inicializando predicados dinamicos faltantes
     asserta(estado_tapa_caja([])),
     asserta(mejor_solucion([])),
-    asserta(posibles_jugadas([])).
-
-    % estado_bolsa/1,
-    % estado_puntuaciones/2,
-    % estado_fabricas/1,
-    % estado_muro/2,
-    % estado_suelo/4,
-    % estado_patrones/2,
-    % cant_rondas/1,
+    asserta(posibles_jugadas([])),
+    asserta(cant_rondas(1)).
 
     inicializar_puntuaciones([]).
     inicializar_puntuaciones([J|Rest_Jugadores]):-
         asserta(estado_puntuaciones(J, 0)),
         inicializar_puntuaciones(Rest_Jugadores).
 
-    inicializar_fabricas(0, []).
-    inicializar_fabricas(CF, [[]|Rest_Fabricas]):-
-        M is CF - 1,
-        inicializar_fabricas(M, Rest_Fabricas).
+    inicializar_fabricas([]).
+    inicializar_fabricas([[]|Rest_Fabricas]):-
+        inicializar_fabricas(Rest_Fabricas).
 
     inicializar_muros([], 0).
     inicializar_muros([J| Rest_jugadores], N):-
