@@ -221,7 +221,7 @@ actualiza_puntuacion_adicional(Jugador, Ronda, Puntuacion_adicional) :-
     asserta(estado_puntuaciones(Ronda, Jugador, Puntuacion_final)).
 
 puntua_adicional(Jugador, Ronda, Puntuacion_adicional) :-
-    estado_muro(Jugador, Ronda, Muro),
+    estado_muro(Ronda, Jugador, Muro),
     contar_2pts_por_lineas_horizontales(Muro, Puntos_horizontales),
     contar_7pts_por_lineas_verticales(Muro, Puntos_verticales),
     contar_10pts_por_colores_completos(Muro, Puntos_colores),
@@ -280,7 +280,7 @@ fin_partida(No_ronda, Termina) :-
 
     comprobar_filas(0, _, _, 0) :- !.
     comprobar_filas(Jugador, No_ronda, 0, Termina) :-
-        estado_muro(Jugador, No_ronda, Muro),
+        estado_muro(No_ronda, Jugador, Muro),
         contar_2pts_por_lineas_horizontales(Muro, Puntos),
         Otro_jugador is Jugador - 1, !,
         comprobar_filas(Otro_jugador, No_ronda, Puntos, Termina).
@@ -288,7 +288,7 @@ fin_partida(No_ronda, Termina) :-
 
 % Puntuación por ronda
 puntua_jugador_ronda(Jugador, No_ronda, I, J, Puntuacion) :-
-    estado_muro(Jugador, No_ronda, Muro),
+    estado_muro(No_ronda, Jugador, Muro),
     I0 is I-1, I1 is I+1, J0 is J-1, J1 is J+1,
     adyacentes_izquierda(I, J0, Muro, 0, Cant_izq),
     adyacentes_derecha(I, J1, Muro, 0, Cant_der),
@@ -403,10 +403,10 @@ nuevo_muro(Muro_viejo, I, J, Muro_nuevo) :-
     actualiza_posicion_del_muro(4, 4, Muro_viejo, I, J, Muro_nuevo).
 
 actualiza_muro(Jugador, Ronda, I, J) :-
-    estado_muro(Jugador, Ronda, Muro_viejo),
+    estado_muro(Ronda, Jugador, Muro_viejo),
     nuevo_muro(Muro_viejo, I, J, Muro_nuevo),
-    retract(estado_muro(Jugador, Ronda, Muro_viejo)),
-    asserta(estado_muro(Jugador, Ronda, Muro_nuevo)),
+    retract(estado_muro(Ronda, Jugador, Muro_viejo)),
+    asserta(estado_muro(Ronda, Jugador, Muro_nuevo)),
     puntua_jugador_ronda(Jugador, Ronda, I, J, P),
     actualiza_puntuacion_adicional(Jugador, Ronda, P).
 
