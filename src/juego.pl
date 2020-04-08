@@ -5,15 +5,25 @@
 % Los jugadores estan enumerados del 1 al 4
 
 % TEST CASE
-estado_muro(1, [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]]).
-estado_muro(2, [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]]).
-cant_jugadores(2).
-estado_puntuaciones(1, 0).
-estado_puntuaciones(2, 0).
-cant_rondas(1).
-estado_patrones(1, [[], [negro, 2], [azul, 1], [], []]).
-estado_patrones(2, [[azul, 1], [], [gris, 1], [], []]).
+% estado_muro(1, [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]]).
+% estado_muro(2, [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]]).
+% cant_jugadores(2).
+% estado_puntuaciones(1, 0).
+% estado_puntuaciones(2, 0).
+% cant_rondas(1).
+% estado_patrones(1, [[], [negro, 2], [azul, 1], [], []]).
+% estado_patrones(2, [[azul, 1], [], [gris, 1], [], []]).
+% estado_tapa_caja([gris]).
 
+% identificadar_jugadores(Cant_jugadores, Lista_identificadores)
+identificadar_jugadores(2, [1, 2]).
+identificadar_jugadores(3, [1, 2, 3]).
+identificadar_jugadores(4, [1, 2, 3, 4]).
+
+iniciar_juego(Cant_jugadores) :-
+    identificadar_jugadores(Cant_jugadores, Jugadores),
+    prepara_partida(Jugadores), !.
+    
 % Predicados dinamicos
 :- dynamic
    mejor_solucion/1,
@@ -61,8 +71,10 @@ prepara_partida(Jugadores):-
     inicializar_suelos(Jugadores, N),
     inicializar_patrones(Jugadores, N),
     decidir_jugador_inicial(Jugadores, JI),
-    asserta(jugador_inicial(1, JI)).
+    asserta(jugador_inicial(1, JI)),
 
+    % Inicializando predicados dinamicos faltantes
+    asserta(estado_tapa_caja([])).
 
     inicializar_puntuaciones([], 0).
     inicializar_puntuaciones([J|Rest_Jugadores], N):-
@@ -195,7 +207,7 @@ llena_bolsa():-
         llena_bolsa_color_(B3, gris, 20, B4),
         llena_bolsa_color_(B4, negro, 20, Bolsa).
 
-    llena_bolsa_color_(Bolsa_antes, _ , 0, Bolsa_antes).
+    llena_bolsa_color_(Bolsa_antes, _, 0, Bolsa_antes).
     llena_bolsa_color_(Bolsa_antes, Color, Cantidad, Bolsa_despues):-
         Nueva_cantidad is Cantidad - 1,
         introduce_azulejo_bolsa(Bolsa_antes, Color, Bolsa_intermedia),
@@ -428,13 +440,37 @@ mover_lineas_de_patron_llenas(Jugador) :-
     mover_azulejo_al_muro(Jugador, 5, P5A, P5D),
     actualizar_patrones(Jugador, [P1A, P2A, P3A, P4A, P5A], [P1D, P2D, P3D, P4D, P5D]), !.
 
+mueve_azulejos_patron_tapa(1, _) :- !.
+mueve_azulejos_patron_tapa(2, [Color, 2]) :-
+    estado_tapa_caja(Tapa),
+    retract(estado_tapa_caja(Tapa)),
+    asserta(estado_tapa_caja([Color|Tapa])), !.
+
+mueve_azulejos_patron_tapa(3, [Color, 3]) :-
+    estado_tapa_caja(Tapa),
+    retract(estado_tapa_caja(Tapa)),
+    asserta(estado_tapa_caja([Color, Color|Tapa])), !.
+
+mueve_azulejos_patron_tapa(4, [Color, 4]) :-
+    estado_tapa_caja(Tapa),
+    retract(estado_tapa_caja(Tapa)),
+    asserta(estado_tapa_caja([Color, Color, Color|Tapa])), !.
+
+mueve_azulejos_patron_tapa(5, [Color, 5]) :-
+    estado_tapa_caja(Tapa),
+    retract(estado_tapa_caja(Tapa)),
+    asserta(estado_tapa_caja([Color, Color, Color, Color|Tapa])), !.
+
+
 actualizar_patrones(Jugador, Patrones_antes, Patrones_desp) :- 
     retract(estado_patrones(Jugador, Patrones_antes)),
     asserta(estado_patrones(Jugador, Patrones_desp)).
 
 mover_azulejo_al_muro(Jugador, N, [Color, N], []) :- 
     I is N-1, posicion_del_color_en_Muro(Color, I, J),
-    actualiza_muro(Jugador, I, J), !.
+    actualiza_muro(Jugador, I, J), 
+    mueve_azulejos_patron_tapa(N, [Color, N]), !.
+
 mover_azulejo_al_muro(_, _, P, P).
 
 alicatado_del_muro() :-
