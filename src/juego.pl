@@ -38,8 +38,7 @@ iniciar_juego(Cant_jugadores) :-
    estado_muro/2,
    estado_suelo/4,
    estado_patrones/2,
-   cant_rondas/1,
-   cant_turnos/2. % cant_turnos(Ronda, Turnos)
+   cant_rondas/1.
 
 % Decidir el numero de fabricas
 
@@ -77,6 +76,14 @@ prepara_partida(Jugadores):-
     asserta(estado_tapa_caja([])),
     asserta(mejor_solucion([])),
     asserta(posibles_jugadas([])).
+
+    % estado_bolsa/1,
+    % estado_puntuaciones/2,
+    % estado_fabricas/1,
+    % estado_muro/2,
+    % estado_suelo/4,
+    % estado_patrones/2,
+    % cant_rondas/1,
 
     inicializar_puntuaciones([], 0).
     inicializar_puntuaciones([J|Rest_Jugadores], N):-
