@@ -62,7 +62,7 @@ iniciar_juego(Cant_jugadores) :-
     prepara_partida(Cant_jugadores).
     jugar(0),
     calcular_todos_los_puntos_adicionales(),
-    determinar_ganadores(),
+    determinar_ganadores(Ganadores),
     !.
 
         % jugar(Termino_la_partida)
@@ -79,6 +79,130 @@ iniciar_juego(Cant_jugadores) :-
         ofertas_de_factoria().
         prepara_siguente_ronda() :-
             llenar_todas_las_fabricas().
+        
+        % TEST CASE para determinar_ganadores
+        % Tres empates
+        cant_jugadores(4).
+        estado_puntuaciones(1, 2).
+        estado_puntuaciones(2, 1).
+        estado_puntuaciones(3, 2).
+        estado_puntuaciones(4, 2).
+        estado_muro(1, [[0, 0, 0, 0, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [0, 0, 1, 0, 1], [0, 0, 0, 1, 1]]).
+        estado_muro(2, [[0, 0, 0, 0, 1], [1, 1, 1, 1, 1], [0, 1, 0, 1, 1], [0, 0, 1, 0, 1], [0, 0, 0, 1, 1]]).
+        estado_muro(3, [[0, 0, 0, 0, 1], [1, 1, 1, 1, 1], [0, 1, 0, 1, 1], [0, 0, 1, 0, 1], [0, 0, 0, 1, 1]]).
+        estado_muro(4, [[0, 0, 0, 0, 1], [1, 1, 1, 1, 1], [0, 1, 0, 1, 1], [0, 0, 1, 0, 1], [0, 0, 0, 1, 1]]).
+
+        determinar_ganadores(Ganadores) :-
+            cant_jugadores(Cant_jugadores),
+            comprobar_puntuaciones(Cant_jugadores, Ganadores), !.
+
+        % actualizar_jugadores_de_puntuacion_maxima(Jugador, PM, Jugadores_de_pt_max_antes, [Jugadores_de_pt_max_desp])
+        actualizar_jugadores_de_puntuacion_maxima(Jugador, PM, Jugadores_de_pt_max, [Jugador|Jugadores_de_pt_max]) :-
+            estado_puntuaciones(Jugador, PM), !.
+        actualizar_jugadores_de_puntuacion_maxima(Jugador, PM, Jugadores_de_pt_max, Jugadores_de_pt_max) :-
+            estado_puntuaciones(Jugador, P), P \= PM, !.
+
+        % actualizar_jugadores_con_mas_filas_completas(Jugador, PM, Jugadores_de_pt_max_antes, [Jugadores_de_pt_max_desp])
+        actualizar_jugadores_con_mas_filas_completas(Jugador, Puntuacion_max_por_filas, Jugadores_empatados, Jugadores_de_pt_max, [Jugador|Jugadores_de_pt_max]) :-
+            estado_muro(Jugador, Muro), member(Jugador, Jugadores_empatados), 
+            contar_2pts_por_lineas_horizontales(Muro, Puntuacion_max_por_filas), !.
+        actualizar_jugadores_con_mas_filas_completas(Jugador, PM, Jugadores_empatados, Jugadores_de_pt_max, Jugadores_de_pt_max) :-
+            member(Jugador, Jugadores_empatados), estado_muro(Jugador, Muro), 
+            contar_2pts_por_lineas_horizontales(Muro, P), P \= PM, !.
+        actualizar_jugadores_con_mas_filas_completas(_, _, _, Jugadores_de_pt_max, Jugadores_de_pt_max) :- !.
+
+        comprobar_puntuaciones(2, Ganadores) :-
+            estado_puntuaciones(1, P1), estado_puntuaciones(2, P2), PM is max(P1, P2),
+            
+            actualizar_jugadores_de_puntuacion_maxima(2, PM, [], JPM1),
+            actualizar_jugadores_de_puntuacion_maxima(1, PM, JPM1, Ganadores),
+
+            length(Ganadores, 1), !.
+        
+        comprobar_puntuaciones(2, Ganadores) :-
+            estado_puntuaciones(1, P1), estado_puntuaciones(2, P2), PM is max(P1, P2),
+            
+            actualizar_jugadores_de_puntuacion_maxima(2, PM, [], JPM1),
+            actualizar_jugadores_de_puntuacion_maxima(1, PM, JPM1, JPM),
+            
+            estado_muro(1, M1), contar_2pts_por_lineas_horizontales(M1, PF1),
+            estado_muro(2, M2), contar_2pts_por_lineas_horizontales(M2, PF2),
+
+            PFM is max(PF1, PF2),
+
+            actualizar_jugadores_con_mas_filas_completas(2, PFM, JPM, [], G1),
+            actualizar_jugadores_con_mas_filas_completas(1, PFM, JPM, G1, Ganadores),
+
+            length(Ganadores, L), L < 3, !.
+
+        
+
+        comprobar_puntuaciones(3, Ganadores) :-
+            estado_puntuaciones(1, P1), estado_puntuaciones(2, P2),
+            estado_puntuaciones(3, P3), PM1 is max(P1, P2), PM is max(PM1, P3),
+            
+            actualizar_jugadores_de_puntuacion_maxima(3, PM, [], JPM1),
+            actualizar_jugadores_de_puntuacion_maxima(2, PM, JPM1, JPM2),
+            actualizar_jugadores_de_puntuacion_maxima(1, PM, JPM2, Ganadores),
+
+            length(Ganadores, 1), !.
+        
+        comprobar_puntuaciones(3, Ganadores) :-
+            estado_puntuaciones(1, P1), estado_puntuaciones(2, P2),
+            estado_puntuaciones(3, P3), PM1 is max(P1, P2), PM is max(PM1, P3),
+            
+            actualizar_jugadores_de_puntuacion_maxima(3, PM, [], JPM1),
+            actualizar_jugadores_de_puntuacion_maxima(2, PM, JPM1, JPM2),
+            actualizar_jugadores_de_puntuacion_maxima(1, PM, JPM2, JPM),
+            
+            estado_muro(1, M1), contar_2pts_por_lineas_horizontales(M1, PF1),
+            estado_muro(2, M2), contar_2pts_por_lineas_horizontales(M2, PF2),
+            estado_muro(3, M3), contar_2pts_por_lineas_horizontales(M3, PF3),
+
+            PFM1 is max(PF1, PF2), PFM is max(PFM1, PF3),
+
+            actualizar_jugadores_con_mas_filas_completas(3, PFM, JPM, [], G1),
+            actualizar_jugadores_con_mas_filas_completas(2, PFM, JPM, G1, G2),
+            actualizar_jugadores_con_mas_filas_completas(1, PFM, JPM, G2, Ganadores),
+
+            length(Ganadores, L), L < 4, !.
+
+        comprobar_puntuaciones(4, Ganadores) :-
+            estado_puntuaciones(1, P1), estado_puntuaciones(2, P2),
+            estado_puntuaciones(3, P3), estado_puntuaciones(4, P4),  
+            PM1 is max(P1, P2), PM2 is max(PM1, P3), PM is max(PM2, P4),
+            
+            actualizar_jugadores_de_puntuacion_maxima(4, PM, [], JPM1),
+            actualizar_jugadores_de_puntuacion_maxima(3, PM, JPM1, JPM2),
+            actualizar_jugadores_de_puntuacion_maxima(2, PM, JPM2, JPM3),
+            actualizar_jugadores_de_puntuacion_maxima(1, PM, JPM3, Ganadores),
+
+            length(Ganadores, 1), !.
+        
+        comprobar_puntuaciones(4, Ganadores) :-
+            estado_puntuaciones(1, P1), estado_puntuaciones(2, P2),
+            estado_puntuaciones(3, P3), estado_puntuaciones(4, P4),  
+            PM1 is max(P1, P2), PM2 is max(PM1, P3), PM is max(PM2, P4),
+            
+            actualizar_jugadores_de_puntuacion_maxima(4, PM, [], JPM1),
+            actualizar_jugadores_de_puntuacion_maxima(3, PM, JPM1, JPM2),
+            actualizar_jugadores_de_puntuacion_maxima(2, PM, JPM2, JPM3),
+            actualizar_jugadores_de_puntuacion_maxima(1, PM, JPM3, JPM),
+            
+            estado_muro(1, M1), contar_2pts_por_lineas_horizontales(M1, PF1),
+            estado_muro(2, M2), contar_2pts_por_lineas_horizontales(M2, PF2),
+            estado_muro(3, M3), contar_2pts_por_lineas_horizontales(M3, PF3),
+            estado_muro(4, M4), contar_2pts_por_lineas_horizontales(M4, PF4),
+
+            PFM1 is max(PF1, PF2), PFM2 is max(PFM1, PF3), PFM is max(PFM2, PF4),
+
+            actualizar_jugadores_con_mas_filas_completas(4, PFM, JPM, [], G1),
+            actualizar_jugadores_con_mas_filas_completas(3, PFM, JPM, G1, G2),
+            actualizar_jugadores_con_mas_filas_completas(2, PFM, JPM, G2, G3),
+            actualizar_jugadores_con_mas_filas_completas(1, PFM, JPM, G3, Ganadores),
+
+            length(Ganadores, L), L < 5, !.
+
 
 % decidir el jugador inicial
 
