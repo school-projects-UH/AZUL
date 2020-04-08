@@ -15,14 +15,13 @@
 % estado_patrones(2, [[azul, 1], [], [gris, 1], [], []]).
 % estado_tapa_caja([gris]).
 
-% identificadar_jugadores(Cant_jugadores, Lista_identificadores)
-identificadar_jugadores(2, [1, 2]).
-identificadar_jugadores(3, [1, 2, 3]).
-identificadar_jugadores(4, [1, 2, 3, 4]).
+% identificar_jugadores(Cant_jugadores, Lista_identificadores)
+identificar_jugadores(2, [1, 2]).
+identificar_jugadores(3, [1, 2, 3]).
+identificar_jugadores(4, [1, 2, 3, 4]).
 
 iniciar_juego(Cant_jugadores) :-
-    identificadar_jugadores(Cant_jugadores, Jugadores),
-    prepara_partida(Jugadores), !.
+    prepara_partida(Cant_jugadores), !.
     
 % Predicados dinamicos
 :- dynamic
@@ -57,13 +56,13 @@ decidir_jugador_inicial(Jugadores, Jugador_escogido):-
 
 % inicializar los estados del juego
 
-prepara_partida(Jugadores):-
-    length(Jugadores, N),
+prepara_partida(N):-
+    identificar_jugadores(N, Jugadores),
     no_fabricas(N, CF),
     asserta(cant_jugadores(N)),
     asserta(cant_fabricas(CF)),
     llena_bolsa(),
-    inicializar_puntuaciones(Jugadores, N),
+    inicializar_puntuaciones(Jugadores),
     inicializar_fabricas(CF, Fabricas),
     asserta(estado_fabricas(Fabricas)),
     inicializar_muros(Jugadores, N),
@@ -85,11 +84,10 @@ prepara_partida(Jugadores):-
     % estado_patrones/2,
     % cant_rondas/1,
 
-    inicializar_puntuaciones([], 0).
-    inicializar_puntuaciones([J|Rest_Jugadores], N):-
+    inicializar_puntuaciones([]).
+    inicializar_puntuaciones([J|Rest_Jugadores]):-
         asserta(estado_puntuaciones(J, 0)),
-        M is N - 1,
-        inicializar_puntuaciones(Rest_Jugadores, M).
+        inicializar_puntuaciones(Rest_Jugadores).
 
     inicializar_fabricas(0, []).
     inicializar_fabricas(CF, [[]|Rest_Fabricas]):-
