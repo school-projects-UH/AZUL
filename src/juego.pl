@@ -141,15 +141,6 @@ llena_fabricas(Bolsa_antes, N, Fabricas, Bolsa_despues):-
         llena_fabricas_(Bolsa_intermedia, M, [Azulejos_escogidos|Fabricas_antes], Fabricas_despues, Bolsa_despues).
 
 
-% el primer jugador llena cada fabrica con 4 azulejos extraidos al azar
-
-mueve_azulejos_bolsa_fabrica(No_ronda):-
-    estado_bolsa(Bolsa_antes),
-    cant_fabricas(CF),
-    llena_fabricas(Bolsa_antes, CF, Fabricas, Bolsa_despues),
-    retract(estado_bolsa(Bolsa_antes)),
-    asserta(estado_bolsa(Bolsa_despues)),
-    asserta(estado_fabricas(Fabricas)).
 
 
 mueve_azulejos_fabrica_centro(Fabrica, Centro_antes, Centro_despues)
@@ -459,11 +450,9 @@ alicatado_del_muro() :-
 numero_azulejos_fabrica(Fabrica, Color, Total):- numero_azulejos_fabrica(Fabrica, Color, 0, Total).
 numero_azulejos_fabrica([], _, Cantidad, Cantidad).
 numero_azulejos_fabrica( [Color|R], Color, Cantidad, Total):-
-    % print("Hello1"),
     Nueva_cantidad is Cantidad + 1,
     numero_azulejos_fabrica(R, Color, Nueva_cantidad, Total).
 numero_azulejos_fabrica( [_|R], Color, Cantidad, Total):-
-    % print("Hello2"),
     numero_azulejos_fabrica(R, Color, Cantidad, Total).
 
 
@@ -513,43 +502,39 @@ color(4, gris).
 color(5, negro).
 
  itera_por_todas_las_jugadas(Jugador):-
-    print("Entering: itera_por_todas_las_jugadas"), nl(),
-    posibles_jugadas(L), length(L, R), print(R), nl(),
+    posibles_jugadas(L),
     asserta(mejor_solucion(1,1,1,1000)),
-    estado_patrones(Jugador, Patrones), print(Patrones), nl(),
-    estado_fabricas(Fabricas), print(Fabricas), nl(), nl(),
-    estado_muro(Jugador, Muro),  print(Muro), nl(),
+    estado_patrones(Jugador, Patrones),
+    estado_fabricas(Fabricas),
+    estado_muro(Jugador, Muro),
 
     itera(L, Fabricas, Patrones, Muro).
 
     itera([], _, _, _).
     itera([[F, C, P]|R], Fabricas, Patrones, Muro):-
-        print([F, C, P]), nl(),
         nth1(F, Fabricas, Fabrica),
         color(C, Color),
         nth1(P, Patrones, Patron),
-        numero_azulejos_fabrica(Fabrica, Color, 0, Total), Total > 0, print(Patron), nl(),
+        numero_azulejos_fabrica(Fabrica, Color, 0, Total), Total > 0,
         puede_poner_en_patron(P, Patron, Muro, [Color, 1], _, _),
         puede_poner_en_patron(P, Patron, Muro, [Color, Total], Azulejos_sobrantes1, Espacio_sobrante1),
-        print(Azulejos_sobrantes1), nl(), print(Espacio_sobrante1), nl(),
         Dif is Azulejos_sobrantes1 - Espacio_sobrante1,
-        AD is abs(Dif), print("Dif"), print(Dif), nl(),
+        AD is abs(Dif),
         actualiza_solucion(F, C, P, AD),
         itera(R, Fabricas, Patrones, Muro).
 
     itera([[F, C, P]|R], Fabricas, Patrones, Muro):-
-         nth1(F, Fabricas, Fabrica), print(Fabrica), nl(),
-         color(C, Color), print(Color), nl(), print("IDColor:"), print(C), nl(),
-         nth1(P, Patrones, Patron), print(Patron), nl(),
+         nth1(F, Fabricas, Fabrica),
+         color(C, Color),
+         nth1(P, Patrones, _),
          numero_azulejos_fabrica(Fabrica, Color, 0, 0),
          itera(R, Fabricas, Patrones, Muro).
 
     itera([[F, C, P]|R], Fabricas, Patrones, Muro):-
-         print([F, C, P]), nl(),
          nth1(F, Fabricas, Fabrica),
          color(C, Color),
          nth1(P, Patrones, Patron),
-         numero_azulejos_fabrica(Fabrica, Color, 0, Total), Total > 0, print(Patron), nl(),
+         numero_azulejos_fabrica(Fabrica, Color, 0, Total), Total > 0,
          not(puede_poner_en_patron(P, Patron, Muro, [Color, 1], _, _)),
          itera(R, Fabricas, Patrones, Muro).
 
