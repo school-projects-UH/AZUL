@@ -26,7 +26,7 @@
    estado_puntuaciones/2,
    estado_fabricas/1,
    estado_muro/2,
-   estado_suelo/4,
+   estado_suelo/2,
    estado_patrones/2,
    cant_rondas/1,
    cant_turnos/2. % cant_turnos(Ronda, Turnos)
@@ -572,7 +572,8 @@ color(5, negro).
 %    nth1(2, Patron, Cantidad_puesta),
 %    Cantidad_a_poner is Cantidad - AS,
 %    mueve_azulejos_a_linea_de_patron(Patron, [Color, Cantidad_a_poner], Patron_modificado)
-
+%    reemplaza_un_patron(No_patron, Patron_modificado),
+%    actualiza_suelo(Color, Azulejos_sobrantes).
 
 reemplaza_un_patron(1, PR):-
     retract(estado_patrones([_, P2, P3, P4, P5])),
@@ -589,4 +590,19 @@ reemplaza_un_patron(4, PR):-
 reemplaza_un_patron(5, PR):-
     retract(estado_patrones([P1, P2, P3, P4, _])),
     asserta(estado_patrones([P1, P2, P3, P4, PR])).
+
+actualiza_suelo(Jugador, Cantidad, 0):-
+    estado_suelo(Jugador, S),
+    Suma is abs(S) + Cantidad,
+    Suma < 15,
+    retract(estado_suelo(Jugador, S)),
+    asserta(estado_suelo(Jugador, -Suma)).
+
+actualiza_suelo(Jugador, Cantidad, Resto):-
+    estado_suelo(Jugador, S),
+    Suma is abs(Cantidad - S),
+    Suma > 14,
+    retract(estado_suelo(Jugador, S)),
+    asserta(estado_suelo(Jugador, -14)),
+    Resto is Cantidad - (14 - abs(S)).
 
