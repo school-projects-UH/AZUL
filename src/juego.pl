@@ -79,7 +79,7 @@ prepara_partida(Jugadores):-
     inicializar_patrones([], 0).
     inicializar_patrones([J| Rest_jugadores], N):-
         M is N - 1,
-        asserta(estado_patrones(0, 0, J, [[""], ["", ""], ["", "", ""], ["", "", "", ""], ["", "", "", "", ""]])),
+        asserta(estado_patrones(0, 0, J, [[], [], [], [], []])),
         inicializar_patrones(Rest_jugadores, M).
 
 
