@@ -30,7 +30,7 @@ iniciar_juego(Cant_jugadores) :-
    posibles_jugadas/1,
    cant_fabricas/1,
    cant_jugadores/1,
-   jugador_inicial/2,
+   jugador_inicial/1,
    estado_tapa_caja/1,
    estado_bolsa/1,
    estado_puntuaciones/2,
@@ -71,10 +71,12 @@ prepara_partida(Jugadores):-
     inicializar_suelos(Jugadores, N),
     inicializar_patrones(Jugadores, N),
     decidir_jugador_inicial(Jugadores, JI),
-    asserta(jugador_inicial(1, JI)),
+    asserta(jugador_inicial(JI)),
 
     % Inicializando predicados dinamicos faltantes
-    asserta(estado_tapa_caja([])).
+    asserta(estado_tapa_caja([])),
+    asserta(mejor_solucion([])),
+    asserta(posibles_jugadas([])).
 
     inicializar_puntuaciones([], 0).
     inicializar_puntuaciones([J|Rest_Jugadores], N):-
