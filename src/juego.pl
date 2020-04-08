@@ -42,11 +42,28 @@ identificar_jugadores(2, [1, 2]).
 identificar_jugadores(3, [1, 2, 3]).
 identificar_jugadores(4, [1, 2, 3, 4]).
 
+no_fabricas(2, 5).
+no_fabricas(3, 7).
+no_fabricas(4, 9).
+
+llenar_todas_las_fabricas() :-
+    estado_fabricas(Fabricas_antes),
+    estado_bolsa(Bolsa_antes),
+    cant_fabricas(N),
+    llena_fabricas(Bolsa_antes, N, Fabricas_antes, Fabricas_despues, Bolsa_despues),
+    
+    retract(estado_bolsa(Bolsa_antes)),
+    asserta(estado_bolsa(Bolsa_despues)),
+
+    retract(estado_fabricas(Fabricas_antes)),
+    asserta(estado_fabricas(Fabricas_despues)).
+
 iniciar_juego(Cant_jugadores) :-
-    prepara_partida(Cant_jugadores), !.
+    prepara_partida(Cant_jugadores).
     % jugar(0),
     % calcular_todos_los_puntos_adicionales(),
     % determinar_ganadores().
+    !.
 
         % jugar(Termino_la_partida)
         jugar(1) :- !.
@@ -94,7 +111,10 @@ prepara_partida(N):-
     asserta(estado_tapa_caja([])),
     asserta(mejor_solucion([])),
     asserta(posibles_jugadas([])),
-    asserta(cant_rondas(1)).
+    asserta(cant_rondas(1)),
+
+    % Añadiendo primeros azulejos a las fabricas
+    llenar_todas_las_fabricas(), !.
 
     inicializar_puntuaciones([]).
     inicializar_puntuaciones([J|Rest_Jugadores]):-
@@ -158,8 +178,8 @@ extrae_4_azulejos_bolsa(Bolsa_antes, [A1, A2, A3, A4], Bolsa_despues):-
 
 % Por cada fabrica, sacar 4 azulejos y colocarlos en la misma
 
-llena_fabricas(Bolsa_antes, N, Fabricas, Bolsa_despues):-
-    llena_fabricas_(Bolsa_antes, N, [], Fabricas, Bolsa_despues).
+llena_fabricas(Bolsa_antes, N, Fabricas_antes, Fabricas_despues, Bolsa_despues):-
+    llena_fabricas_(Bolsa_antes, N, [], Fabricas_despues, Bolsa_despues).
 
     llena_fabricas_(Bolsa_antes, 0, Fabricas_antes, Fabricas_antes, Bolsa_antes).
     llena_fabricas_(Bolsa_antes, N, Fabricas_antes, Fabricas_despues, Bolsa_despues):-
