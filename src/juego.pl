@@ -22,9 +22,9 @@
 
 % Decidir el numero de fabricas
 
-no_fabricas(2, 5).
-no_fabricas(3, 7).
-no_fabricas(4, 9).
+no_fabricas(2, 5, [[], [], [], [], []]).
+no_fabricas(3, 7, [[], [], [], [], [], [], []]).
+no_fabricas(4, 9, [[], [], [], [], [], [], [], [], []]).
 
 
 % decidir el jugador inicial
@@ -39,13 +39,13 @@ decidir_jugador_inicial(Jugadores, Jugador_escogido):-
 
 prepara_partida(Jugadores):-
     length(Jugadores, N),
-    no_fabricas(N, CF),
+    no_fabricas(N, CF, Fabricas_vacias),
     asserta(cant_jugadores(N)),
     asserta(cant_fabricas(CF)),
     llena_bolsa(),
     inicializar_puntuaciones(Jugadores, N),
-    inicializar_fabricas(CF, Fabricas),
-    asserta(estado_fabricas(0, 0, "", Fabricas)),
+    % inicializar_fabricas(CF, Fabricas),
+    asserta(estado_fabricas(Fabricas_vacias)),
     inicializar_muros(Jugadores, N),
     inicializar_suelos(Jugadores, N),
     inicializar_patrones(Jugadores, N),
@@ -179,11 +179,11 @@ llena_bolsa():-
     asserta(estado_bolsa(0, Bolsa)).
 
     llena_bolsa_(Bolsa):-
-        llena_bolsa_color_([], "azul", 20, B1),
-        llena_bolsa_color_(B1, "rojo", 20, B2),
-        llena_bolsa_color_(B2, "amarillo", 20, B3),
-        llena_bolsa_color_(B3, "gris", 20, B4),
-        llena_bolsa_color_(B4, "negro", 20, Bolsa).
+        llena_bolsa_color_([], azul, 20, B1),
+        llena_bolsa_color_(B1, rojo, 20, B2),
+        llena_bolsa_color_(B2, amarillo, 20, B3),
+        llena_bolsa_color_(B3, gris, 20, B4),
+        llena_bolsa_color_(B4, negro, 20, Bolsa).
 
     llena_bolsa_color_(Bolsa_antes, _ , 0, Bolsa_antes).
     llena_bolsa_color_(Bolsa_antes, Color, Cantidad, Bolsa_despues):-
@@ -354,8 +354,8 @@ puede_poner_en_patron(No_patron, [], Muro, [Color, Cant], Azulejos_sobrantes, Es
     valor_en(Muro, I, J, 0), Azulejos_sobrantes is max(0, Cant - No_patron),
     Espacio_sobrante is max(0, No_patron - Cant), !.
 
-mueve_azulejos_a_linea_de_patron(_, [], [Color, Cant], [Color, Cant]) :- !.
-mueve_azulejos_a_linea_de_patron(No_patron, [Color, Cant_patron], [Color, Cant_azulejos], [Color, Cant_desp]) :-
+mueve_azulejos_a_linea_de_patron([], [Color, Cant], [Color, Cant]) :- !.
+mueve_azulejos_a_linea_de_patron([Color, Cant_patron], [Color, Cant_azulejos], [Color, Cant_desp]) :-
     Cant_desp is Cant_patron + Cant_azulejos.
 
 
