@@ -573,7 +573,9 @@ color(5, negro).
 %    Cantidad_a_poner is Cantidad - AS,
 %    mueve_azulejos_a_linea_de_patron(Patron, [Color, Cantidad_a_poner], Patron_modificado)
 %    reemplaza_un_patron(No_patron, Patron_modificado),
-%    actualiza_suelo(Color, Azulejos_sobrantes).
+%    actualiza_suelo(Jugador, Azulejos_sobrantes, Resto).
+%    estado_tapa_caja(Tapa_caja),
+%    
 
 reemplaza_un_patron(1, PR):-
     retract(estado_patrones([_, P2, P3, P4, P5])),
@@ -606,3 +608,8 @@ actualiza_suelo(Jugador, Cantidad, Resto):-
     asserta(estado_suelo(Jugador, -14)),
     Resto is Cantidad - (14 - abs(S)).
 
+llena_tapa_caja_color(Color, Cantidad):-
+    estado_tapa_caja(Tapa_caja),
+    llena_bolsa_color_(Tapa_caja, Color, Cantidad, Tapa_despues),
+    retract(estado_tapa_caja(Tapa_caja)),
+    asserta(estado_tapa_caja(Tapa_despues)).
