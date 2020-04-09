@@ -27,7 +27,7 @@
    estado_puntuaciones/2,
    estado_fabricas/1,
    estado_muro/2,
-   estado_suelo/4,
+   estado_suelo/2,
    estado_patrones/2,
    cant_rondas/1.
 
@@ -309,17 +309,6 @@ llena_fabricas(Bolsa_antes, N, Fabricas_antes, Fabricas_despues, Bolsa_despues):
         llena_fabricas_(Bolsa_intermedia, M, [Azulejos_escogidos|Fabricas_antes], Fabricas_despues, Bolsa_despues).
 
 
-% el primer jugador llena cada fabrica con 4 azulejos extraidos al azar
-
-mueve_azulejos_bolsa_fabrica(No_ronda):-
-    estado_bolsa(Bolsa_antes),
-    cant_fabricas(CF),
-    llena_fabricas(Bolsa_antes, CF, Fabricas, Bolsa_despues),
-    retract(estado_bolsa(Bolsa_antes)),
-    asserta(estado_bolsa(Bolsa_despues)),
-    asserta(estado_fabricas(Fabricas)).
-
-
 mueve_azulejos_fabrica_centro(Fabrica, Centro_antes, Centro_despues)
     :- append(Centro_antes, Fabrica, Centro_despues).
 
@@ -351,6 +340,7 @@ extrae_todos_azulejos_fabrica(Fabrica, Azulejo_escogido, Fabrica) :-
 extrae_todos_azulejos_fabrica(Fabrica_antes, Azulejo_escogido, Fabrica_despues) :-
     extrae_un_azulejo_fabrica(Fabrica_antes, Azulejo_escogido, Fabrica_despues_temp), !,
     extrae_todos_azulejos_fabrica(Fabrica_despues_temp, Azulejo_escogido, Fabrica_despues).
+
 
 
 % llenar la bolsa con 100 azulejos al principio de la partida
@@ -576,36 +566,36 @@ actualiza_posicion_del_muro(I0, J0, Muro_viejo, _, _, Muro_nuevo) :-
 nuevo_muro(Muro_viejo, I, J, Muro_nuevo) :-
     length(Muro_nuevo, 5), nth0(0, Muro_nuevo, F0), nth0(1, Muro_nuevo, F1),
     nth0(2, Muro_nuevo, F2), nth0(3, Muro_nuevo, F3), nth0(4, Muro_nuevo, F4),
-    length(F0, 5), length(F1, 5), length(F2, 5), length(F3, 5), length(F4, 5), 
+    length(F0, 5), length(F1, 5), length(F2, 5), length(F3, 5), length(F4, 5),
 
     actualiza_posicion_del_muro(0, 0, Muro_viejo, I, J, Muro_nuevo),
-    actualiza_posicion_del_muro(0, 1, Muro_viejo, I, J, Muro_nuevo), 
-    actualiza_posicion_del_muro(0, 2, Muro_viejo, I, J, Muro_nuevo), 
-    actualiza_posicion_del_muro(0, 3, Muro_viejo, I, J, Muro_nuevo), 
+    actualiza_posicion_del_muro(0, 1, Muro_viejo, I, J, Muro_nuevo),
+    actualiza_posicion_del_muro(0, 2, Muro_viejo, I, J, Muro_nuevo),
+    actualiza_posicion_del_muro(0, 3, Muro_viejo, I, J, Muro_nuevo),
     actualiza_posicion_del_muro(0, 4, Muro_viejo, I, J, Muro_nuevo),
 
-    actualiza_posicion_del_muro(1, 0, Muro_viejo, I, J, Muro_nuevo), 
-    actualiza_posicion_del_muro(1, 1, Muro_viejo, I, J, Muro_nuevo), 
-    actualiza_posicion_del_muro(1, 2, Muro_viejo, I, J, Muro_nuevo), 
-    actualiza_posicion_del_muro(1, 3, Muro_viejo, I, J, Muro_nuevo), 
-    actualiza_posicion_del_muro(1, 4, Muro_viejo, I, J, Muro_nuevo), 
-    
+    actualiza_posicion_del_muro(1, 0, Muro_viejo, I, J, Muro_nuevo),
+    actualiza_posicion_del_muro(1, 1, Muro_viejo, I, J, Muro_nuevo),
+    actualiza_posicion_del_muro(1, 2, Muro_viejo, I, J, Muro_nuevo),
+    actualiza_posicion_del_muro(1, 3, Muro_viejo, I, J, Muro_nuevo),
+    actualiza_posicion_del_muro(1, 4, Muro_viejo, I, J, Muro_nuevo),
+
     actualiza_posicion_del_muro(2, 0, Muro_viejo, I, J, Muro_nuevo),
-    actualiza_posicion_del_muro(2, 1, Muro_viejo, I, J, Muro_nuevo), 
-    actualiza_posicion_del_muro(2, 2, Muro_viejo, I, J, Muro_nuevo), 
-    actualiza_posicion_del_muro(2, 3, Muro_viejo, I, J, Muro_nuevo), 
-    actualiza_posicion_del_muro(2, 4, Muro_viejo, I, J, Muro_nuevo), 
-    
-    actualiza_posicion_del_muro(3, 0, Muro_viejo, I, J, Muro_nuevo), 
-    actualiza_posicion_del_muro(3, 1, Muro_viejo, I, J, Muro_nuevo), 
-    actualiza_posicion_del_muro(3, 2, Muro_viejo, I, J, Muro_nuevo), 
-    actualiza_posicion_del_muro(3, 3, Muro_viejo, I, J, Muro_nuevo), 
+    actualiza_posicion_del_muro(2, 1, Muro_viejo, I, J, Muro_nuevo),
+    actualiza_posicion_del_muro(2, 2, Muro_viejo, I, J, Muro_nuevo),
+    actualiza_posicion_del_muro(2, 3, Muro_viejo, I, J, Muro_nuevo),
+    actualiza_posicion_del_muro(2, 4, Muro_viejo, I, J, Muro_nuevo),
+
+    actualiza_posicion_del_muro(3, 0, Muro_viejo, I, J, Muro_nuevo),
+    actualiza_posicion_del_muro(3, 1, Muro_viejo, I, J, Muro_nuevo),
+    actualiza_posicion_del_muro(3, 2, Muro_viejo, I, J, Muro_nuevo),
+    actualiza_posicion_del_muro(3, 3, Muro_viejo, I, J, Muro_nuevo),
     actualiza_posicion_del_muro(3, 4, Muro_viejo, I, J, Muro_nuevo),
-    
+
     actualiza_posicion_del_muro(4, 0, Muro_viejo, I, J, Muro_nuevo),
-    actualiza_posicion_del_muro(4, 1, Muro_viejo, I, J, Muro_nuevo), 
-    actualiza_posicion_del_muro(4, 2, Muro_viejo, I, J, Muro_nuevo), 
-    actualiza_posicion_del_muro(4, 3, Muro_viejo, I, J, Muro_nuevo), 
+    actualiza_posicion_del_muro(4, 1, Muro_viejo, I, J, Muro_nuevo),
+    actualiza_posicion_del_muro(4, 2, Muro_viejo, I, J, Muro_nuevo),
+    actualiza_posicion_del_muro(4, 3, Muro_viejo, I, J, Muro_nuevo),
     actualiza_posicion_del_muro(4, 4, Muro_viejo, I, J, Muro_nuevo).
 
 actualiza_muro(Jugador, I, J) :-
@@ -618,10 +608,10 @@ actualiza_muro(Jugador, I, J) :-
 
 mover_lineas_de_patron_llenas(Jugador) :-
     estado_patrones(Jugador, [P1A, P2A, P3A, P4A, P5A]),
-    mover_azulejo_al_muro(Jugador, 1, P1A, P1D), 
-    mover_azulejo_al_muro(Jugador, 2, P2A, P2D), 
-    mover_azulejo_al_muro(Jugador, 3, P3A, P3D), 
-    mover_azulejo_al_muro(Jugador, 4, P4A, P4D), 
+    mover_azulejo_al_muro(Jugador, 1, P1A, P1D),
+    mover_azulejo_al_muro(Jugador, 2, P2A, P2D),
+    mover_azulejo_al_muro(Jugador, 3, P3A, P3D),
+    mover_azulejo_al_muro(Jugador, 4, P4A, P4D),
     mover_azulejo_al_muro(Jugador, 5, P5A, P5D),
     actualizar_patrones(Jugador, [P1A, P2A, P3A, P4A, P5A], [P1D, P2D, P3D, P4D, P5D]), !.
 
@@ -647,11 +637,11 @@ mueve_azulejos_patron_tapa(5, [Color, 5]) :-
     asserta(estado_tapa_caja([Color, Color, Color, Color|Tapa])), !.
 
 
-actualizar_patrones(Jugador, Patrones_antes, Patrones_desp) :- 
+actualizar_patrones(Jugador, Patrones_antes, Patrones_desp) :-
     retract(estado_patrones(Jugador, Patrones_antes)),
     asserta(estado_patrones(Jugador, Patrones_desp)).
 
-mover_azulejo_al_muro(Jugador, N, [Color, N], []) :- 
+mover_azulejo_al_muro(Jugador, N, [Color, N], []) :-
     I is N-1, posicion_del_color_en_Muro(Color, I, J),
     actualiza_muro(Jugador, I, J), 
     mueve_azulejos_patron_tapa(N, [Color, N]), !.
@@ -677,11 +667,9 @@ alicatado_del_muro() :-
 numero_azulejos_fabrica(Fabrica, Color, Total):- numero_azulejos_fabrica(Fabrica, Color, 0, Total).
 numero_azulejos_fabrica([], _, Cantidad, Cantidad).
 numero_azulejos_fabrica( [Color|R], Color, Cantidad, Total):-
-    % print("Hello1"),
     Nueva_cantidad is Cantidad + 1,
     numero_azulejos_fabrica(R, Color, Nueva_cantidad, Total).
 numero_azulejos_fabrica( [_|R], Color, Cantidad, Total):-
-    % print("Hello2"),
     numero_azulejos_fabrica(R, Color, Cantidad, Total).
 
 
@@ -731,42 +719,105 @@ color(4, gris).
 color(5, negro).
 
  itera_por_todas_las_jugadas(Jugador):-
-    print("Entering: itera_por_todas_las_jugadas"), nl(),
-    posibles_jugadas(L), length(L, R), print(R), nl(),
+    posibles_jugadas(L),
     asserta(mejor_solucion(1,1,1,1000)),
-    estado_patrones(Jugador, Patrones), print(Patrones), nl(),
-    estado_fabricas(Fabricas), print(Fabricas), nl(), nl(),
-    estado_muro(Jugador, Muro),  print(Muro), nl(),
+    estado_patrones(Jugador, Patrones),
+    estado_fabricas(Fabricas),
+    estado_muro(Jugador, Muro),
 
     itera(L, Fabricas, Patrones, Muro).
 
     itera([], _, _, _).
     itera([[F, C, P]|R], Fabricas, Patrones, Muro):-
-        print([F, C, P]), nl(),
         nth1(F, Fabricas, Fabrica),
         color(C, Color),
         nth1(P, Patrones, Patron),
-        numero_azulejos_fabrica(Fabrica, Color, 0, Total), Total > 0, print(Patron), nl(),
+        numero_azulejos_fabrica(Fabrica, Color, 0, Total), Total > 0,
         puede_poner_en_patron(P, Patron, Muro, [Color, 1], _, _),
         puede_poner_en_patron(P, Patron, Muro, [Color, Total], Azulejos_sobrantes1, Espacio_sobrante1),
-        print(Azulejos_sobrantes1), nl(), print(Espacio_sobrante1), nl(),
         Dif is Azulejos_sobrantes1 - Espacio_sobrante1,
-        AD is abs(Dif), print("Dif"), print(Dif), nl(),
+        AD is abs(Dif),
         actualiza_solucion(F, C, P, AD),
         itera(R, Fabricas, Patrones, Muro).
 
     itera([[F, C, P]|R], Fabricas, Patrones, Muro):-
-         nth1(F, Fabricas, Fabrica), print(Fabrica), nl(),
-         color(C, Color), print(Color), nl(), print("IDColor:"), print(C), nl(),
-         nth1(P, Patrones, Patron), print(Patron), nl(),
+         nth1(F, Fabricas, Fabrica),
+         color(C, Color),
+         nth1(P, Patrones, _),
          numero_azulejos_fabrica(Fabrica, Color, 0, 0),
          itera(R, Fabricas, Patrones, Muro).
 
     itera([[F, C, P]|R], Fabricas, Patrones, Muro):-
-         print([F, C, P]), nl(),
          nth1(F, Fabricas, Fabrica),
          color(C, Color),
          nth1(P, Patrones, Patron),
-         numero_azulejos_fabrica(Fabrica, Color, 0, Total), Total > 0, print(Patron), nl(),
+         numero_azulejos_fabrica(Fabrica, Color, 0, Total), Total > 0,
          not(puede_poner_en_patron(P, Patron, Muro, [Color, 1], _, _)),
          itera(R, Fabricas, Patrones, Muro).
+
+
+
+reemplazar([_|T], 0, X, [X|T]).
+reemplazar([H|T], I, X, [H|R]):- I > 0, I1 is I-1, reemplazar(T, I1, X, R).
+
+% Candidato a revisar por si falla si falla
+mueve_azulejos_fabrica_patron(Jugador, Id_Fabrica, Color, No_patron):-
+    estado_fabricas(Fabricas),
+    nth1(Id_Fabrica, Fabricas, Fabrica),
+    numero_azulejos_fabrica(Fabrica, Color, Cantidad),
+    extrae_todos_azulejos_fabrica(Fabrica, Color, Fabrica_modificada),
+    Id is Id_Fabrica - 1,
+    reemplazar(Fabricas, Id , Fabrica_modificada, Nuevas_fabricas),
+    retract(estado_fabricas(Fabricas)),
+    asserta(estado_fabricas(Nuevas_fabricas)),
+    coloca_azulejos_patron(Jugador, No_patron, Color, Cantidad).
+
+
+coloca_azulejos_patron(Jugador, No_patron, Color, Cantidad):-
+    estado_patrones(Jugador, Patrones),
+    estado_muro(Jugador, Muro),
+    nth1(No_patron, Patrones, Patron),
+    puede_poner_en_patron(No_patron, Patron, Muro, [Color, Cantidad], AS, _),
+    Cantidad_a_poner is Cantidad - AS,
+    mueve_azulejos_a_linea_de_patron(Patron, [Color, Cantidad_a_poner], Patron_modificado),
+    reemplaza_un_patron(Jugador, No_patron, Patron_modificado),
+    actualiza_suelo(Jugador, AS, _),
+    llena_tapa_caja_color(Color, AS).
+
+
+reemplaza_un_patron(Jugador, 1, PR):-
+    retract(estado_patrones(Jugador, [_, P2, P3, P4, P5])),
+    asserta(estado_patrones(Jugador, [PR, P2, P3, P4, P5])).
+reemplaza_un_patron(Jugador, 2, PR):-
+    retract(estado_patrones(Jugador, [P1, _, P3, P4, P5])),
+    asserta(estado_patrones(Jugador, [P1, PR, P3, P4, P5])).
+reemplaza_un_patron(Jugador, 3, PR):-
+    retract(estado_patrones(Jugador, [P1, P2, _, P4, P5])),
+    asserta(estado_patrones(Jugador, [P1, P2, PR, P4, P5])).
+reemplaza_un_patron(Jugador, 4, PR):-
+    retract(estado_patrones(Jugador, [P1, P2, P3, _, P5])),
+    asserta(estado_patrones(Jugador, [P1, P2, P3, PR, P5])).
+reemplaza_un_patron(Jugador, 5, PR):-
+    retract(estado_patrones(Jugador, [P1, P2, P3, P4, _])),
+    asserta(estado_patrones(Jugador, [P1, P2, P3, P4, PR])).
+
+actualiza_suelo(Jugador, Cantidad, 0):-
+    estado_suelo(Jugador, S),
+    Suma is abs(S) + Cantidad,
+    Suma < 15,
+    retract(estado_suelo(Jugador, S)),
+    asserta(estado_suelo(Jugador, -Suma)).
+
+actualiza_suelo(Jugador, Cantidad, Resto):-
+    estado_suelo(Jugador, S),
+    Suma is abs(Cantidad - S),
+    Suma > 14,
+    retract(estado_suelo(Jugador, S)),
+    asserta(estado_suelo(Jugador, -14)),
+    Resto is Cantidad - (14 - abs(S)).
+
+llena_tapa_caja_color(Color, Cantidad):-
+    estado_tapa_caja(Tapa_caja),
+    llena_bolsa_color_(Tapa_caja, Color, Cantidad, Tapa_despues),
+    retract(estado_tapa_caja(Tapa_caja)),
+    asserta(estado_tapa_caja(Tapa_despues)).
