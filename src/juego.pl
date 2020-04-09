@@ -31,12 +31,6 @@
    estado_patrones/2,
    cant_rondas/1.
 
-% Decidir el numero de fabricas
-
-no_fabricas(2, 5).
-no_fabricas(3, 7).
-no_fabricas(4, 9).
-
 % identificar_jugadores(Cant_jugadores, Lista_identificadores)
 identificar_jugadores(2, [1, 2]).
 identificar_jugadores(3, [1, 2, 3]).
@@ -59,7 +53,7 @@ llenar_todas_las_fabricas() :-
     asserta(estado_fabricas(Fabricas_despues)).
 
 iniciar_juego(Cant_jugadores) :-
-    prepara_partida(Cant_jugadores).
+    prepara_partida(Cant_jugadores),
     jugar(0),
     calcular_todos_los_puntos_adicionales(),
     determinar_ganadores(Ganadores),
