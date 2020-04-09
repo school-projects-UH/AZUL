@@ -56,7 +56,7 @@ iniciar_juego(Cant_jugadores) :-
     prepara_partida(Cant_jugadores),
     jugar(0),
     calcular_todos_los_puntos_adicionales(),
-    determinar_ganadores(Ganadores),
+    determinar_ganadores(_),
     !.
 
         % jugar(Termino_la_partida)
