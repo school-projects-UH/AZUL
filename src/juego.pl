@@ -74,6 +74,8 @@ iniciar_juego(Cant_jugadores) :-
         ofertas_de_factoria().
 
         prepara_siguiente_ronda() :-
+            retract(estado_centro([])),
+            asserta(estado_centro([ficha_jugador_inicial])),
             llenar_todas_las_fabricas().
         
         % TEST CASE para determinar_ganadores
