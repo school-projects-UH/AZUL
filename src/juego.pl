@@ -5,7 +5,7 @@
 % Los jugadores estan enumerados del 1 al 4
 
 % TEST CASE
-% estado_muro(1, [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]]).
+% estado_muro(1, [[0, 0, 0, 0, 0], [0, 1, 1, 1, 1], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]]).
 % estado_muro(2, [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]]).
 % cant_jugadores(2).
 % estado_puntuaciones(1, 0).
@@ -13,6 +13,8 @@
 % cant_rondas(1).
 % estado_patrones(1, [[], [negro, 2], [azul, 1], [], []]).
 % estado_patrones(2, [[azul, 1], [], [gris, 1], [], []]).
+% estado_suelo(1, -3).
+% estado_suelo(2, 0).
 % estado_tapa_caja([gris]).
   
 % Predicados dinamicos
@@ -649,9 +651,15 @@ alicatado_del_muro() :-
     alicatar(0) :- !.
     alicatar(Jugador) :-
         mover_lineas_de_patron_llenas(Jugador),
+        resta_azulejos_suelo(Jugador),
         Otro_jugador is Jugador - 1, !,
         alicatar(Otro_jugador).
 
+    resta_azulejos_suelo(Jugador) :-
+        estado_suelo(Jugador, Puntos_negativos),
+        actualiza_puntuacion_adicional(Jugador, Puntos_negativos), 
+        retract(estado_suelo(Jugador, Puntos_negativos)),
+        asserta(estado_suelo(Jugador, 0)), !.
 
 % dada una fabrica, cuenta el numero de azulejos que hay de un color determinado
 
