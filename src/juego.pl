@@ -16,7 +16,7 @@
 % estado_suelo(1, -3).
 % estado_suelo(2, 0).
 % estado_tapa_caja([gris]).
-  
+
 % Predicados dinamicos
 :- dynamic
    mejor_solucion/1,
@@ -41,11 +41,12 @@ identificar_jugadores(4, [1, 2, 3, 4]).
 
 
 llenar_todas_las_fabricas() :-
+    write("LLenar_todas_las_fabricas"), nl(),
     estado_fabricas(Fabricas_antes),
     estado_bolsa(Bolsa_antes),
     cant_fabricas(N),
     llena_fabricas(Bolsa_antes, N, Fabricas_antes, Fabricas_despues, Bolsa_despues),
-    
+
     retract(estado_bolsa(Bolsa_antes)),
     asserta(estado_bolsa(Bolsa_despues)),
 
@@ -69,15 +70,28 @@ iniciar_juego(Cant_jugadores) :-
             fin_partida(Termina), !,
             jugar(Termina),
             !.
-        
+
         % Poner la lógica de la fase de ofertas de factoria como objetivo de este predicado
         ofertas_de_factoria().
 
+
         prepara_siguiente_ronda() :-
+
+            asserta(estado_centro([])),
+            llena_bolsa(),
+            asserta(cant_fabricas(3)),
+            asserta(estado_fabricas([[], [], []])),
             retract(estado_centro([])),
             asserta(estado_centro([ficha_jugador_inicial])),
-            llenar_todas_las_fabricas().
-        
+            llenar_todas_las_fabricas(),
+            estado_fabricas(Fabricas),
+            write_state(Fabricas), write("FIN"), nl().
+
+            write_state(State):-
+                open("output.txt",append,Stream),
+                write(Stream,State),  nl(Stream),
+                close(Stream).
+
         % TEST CASE para determinar_ganadores
         % cant_jugadores(4).
         % estado_puntuaciones(1, 2).
@@ -101,27 +115,27 @@ iniciar_juego(Cant_jugadores) :-
 
         % actualizar_jugadores_con_mas_filas_completas(Jugador, PM, Jugadores_de_pt_max_antes, [Jugadores_de_pt_max_desp])
         actualizar_jugadores_con_mas_filas_completas(Jugador, Puntuacion_max_por_filas, Jugadores_empatados, Jugadores_de_pt_max, [Jugador|Jugadores_de_pt_max]) :-
-            estado_muro(Jugador, Muro), member(Jugador, Jugadores_empatados), 
+            estado_muro(Jugador, Muro), member(Jugador, Jugadores_empatados),
             contar_2pts_por_lineas_horizontales(Muro, Puntuacion_max_por_filas), !.
         actualizar_jugadores_con_mas_filas_completas(Jugador, PM, Jugadores_empatados, Jugadores_de_pt_max, Jugadores_de_pt_max) :-
-            member(Jugador, Jugadores_empatados), estado_muro(Jugador, Muro), 
+            member(Jugador, Jugadores_empatados), estado_muro(Jugador, Muro),
             contar_2pts_por_lineas_horizontales(Muro, P), P \= PM, !.
         actualizar_jugadores_con_mas_filas_completas(_, _, _, Jugadores_de_pt_max, Jugadores_de_pt_max) :- !.
 
         comprobar_puntuaciones(2, Ganadores) :-
             estado_puntuaciones(1, P1), estado_puntuaciones(2, P2), PM is max(P1, P2),
-            
+
             actualizar_jugadores_de_puntuacion_maxima(2, PM, [], JPM1),
             actualizar_jugadores_de_puntuacion_maxima(1, PM, JPM1, Ganadores),
 
             length(Ganadores, 1), !.
-        
+
         comprobar_puntuaciones(2, Ganadores) :-
             estado_puntuaciones(1, P1), estado_puntuaciones(2, P2), PM is max(P1, P2),
-            
+
             actualizar_jugadores_de_puntuacion_maxima(2, PM, [], JPM1),
             actualizar_jugadores_de_puntuacion_maxima(1, PM, JPM1, JPM),
-            
+
             estado_muro(1, M1), contar_2pts_por_lineas_horizontales(M1, PF1),
             estado_muro(2, M2), contar_2pts_por_lineas_horizontales(M2, PF2),
 
@@ -132,26 +146,26 @@ iniciar_juego(Cant_jugadores) :-
 
             length(Ganadores, L), L < 3, !.
 
-        
+
 
         comprobar_puntuaciones(3, Ganadores) :-
             estado_puntuaciones(1, P1), estado_puntuaciones(2, P2),
             estado_puntuaciones(3, P3), PM1 is max(P1, P2), PM is max(PM1, P3),
-            
+
             actualizar_jugadores_de_puntuacion_maxima(3, PM, [], JPM1),
             actualizar_jugadores_de_puntuacion_maxima(2, PM, JPM1, JPM2),
             actualizar_jugadores_de_puntuacion_maxima(1, PM, JPM2, Ganadores),
 
             length(Ganadores, 1), !.
-        
+
         comprobar_puntuaciones(3, Ganadores) :-
             estado_puntuaciones(1, P1), estado_puntuaciones(2, P2),
             estado_puntuaciones(3, P3), PM1 is max(P1, P2), PM is max(PM1, P3),
-            
+
             actualizar_jugadores_de_puntuacion_maxima(3, PM, [], JPM1),
             actualizar_jugadores_de_puntuacion_maxima(2, PM, JPM1, JPM2),
             actualizar_jugadores_de_puntuacion_maxima(1, PM, JPM2, JPM),
-            
+
             estado_muro(1, M1), contar_2pts_por_lineas_horizontales(M1, PF1),
             estado_muro(2, M2), contar_2pts_por_lineas_horizontales(M2, PF2),
             estado_muro(3, M3), contar_2pts_por_lineas_horizontales(M3, PF3),
@@ -166,26 +180,26 @@ iniciar_juego(Cant_jugadores) :-
 
         comprobar_puntuaciones(4, Ganadores) :-
             estado_puntuaciones(1, P1), estado_puntuaciones(2, P2),
-            estado_puntuaciones(3, P3), estado_puntuaciones(4, P4),  
+            estado_puntuaciones(3, P3), estado_puntuaciones(4, P4),
             PM1 is max(P1, P2), PM2 is max(PM1, P3), PM is max(PM2, P4),
-            
+
             actualizar_jugadores_de_puntuacion_maxima(4, PM, [], JPM1),
             actualizar_jugadores_de_puntuacion_maxima(3, PM, JPM1, JPM2),
             actualizar_jugadores_de_puntuacion_maxima(2, PM, JPM2, JPM3),
             actualizar_jugadores_de_puntuacion_maxima(1, PM, JPM3, Ganadores),
 
             length(Ganadores, 1), !.
-        
+
         comprobar_puntuaciones(4, Ganadores) :-
             estado_puntuaciones(1, P1), estado_puntuaciones(2, P2),
-            estado_puntuaciones(3, P3), estado_puntuaciones(4, P4),  
+            estado_puntuaciones(3, P3), estado_puntuaciones(4, P4),
             PM1 is max(P1, P2), PM2 is max(PM1, P3), PM is max(PM2, P4),
-            
+
             actualizar_jugadores_de_puntuacion_maxima(4, PM, [], JPM1),
             actualizar_jugadores_de_puntuacion_maxima(3, PM, JPM1, JPM2),
             actualizar_jugadores_de_puntuacion_maxima(2, PM, JPM2, JPM3),
             actualizar_jugadores_de_puntuacion_maxima(1, PM, JPM3, JPM),
-            
+
             estado_muro(1, M1), contar_2pts_por_lineas_horizontales(M1, PF1),
             estado_muro(2, M2), contar_2pts_por_lineas_horizontales(M2, PF2),
             estado_muro(3, M3), contar_2pts_por_lineas_horizontales(M3, PF3),
@@ -297,10 +311,12 @@ extrae_4_azulejos_bolsa(Bolsa_antes, [A1, A2, A3, A4], Bolsa_despues):-
 % Por cada fabrica, sacar 4 azulejos y colocarlos en la misma
 
 llena_fabricas(Bolsa_antes, N, Fabricas_antes, Fabricas_despues, Bolsa_despues):-
+    write("llena_fabricas"), nl(),
     llena_fabricas_(Bolsa_antes, N, [], Fabricas_despues, Bolsa_despues).
 
     llena_fabricas_(Bolsa_antes, 0, Fabricas_antes, Fabricas_antes, Bolsa_antes).
     llena_fabricas_(Bolsa_antes, N, Fabricas_antes, Fabricas_despues, Bolsa_despues):-
+        write("llena_fabricas_"), write(N), write(Fabricas_antes), nl(),
         extrae_4_azulejos_bolsa(Bolsa_antes, Azulejos_escogidos, Bolsa_intermedia),
         M is N - 1,
         llena_fabricas_(Bolsa_intermedia, M, [Azulejos_escogidos|Fabricas_antes], Fabricas_despues, Bolsa_despues).
@@ -343,6 +359,7 @@ extrae_todos_azulejos_fabrica(Fabrica_antes, Azulejo_escogido, Fabrica_despues) 
 % llenar la bolsa con 100 azulejos al principio de la partida
 
 llena_bolsa():-
+    write("llena_bolsa"), nl(),
     llena_bolsa_(Bolsa),
     asserta(estado_bolsa(Bolsa)).
 
@@ -469,15 +486,15 @@ fin_partida(T2) :-
         comprobar_filas(Otro_jugador, Puntos, Termina).
     comprobar_filas(_, _, 1) :- !.
 
-    comprobar_cantidad_azuelejos(1) :- 
+    comprobar_cantidad_azuelejos(1) :-
         estado_bolsa(Bolsa), length(Bolsa, 0),
         estado_tapa_caja(Tapa), length(Tapa, 0), !.
-    
-    comprobar_cantidad_azuelejos(0) :- 
+
+    comprobar_cantidad_azuelejos(0) :-
         estado_bolsa(Bolsa), length(Bolsa, CB),
         estado_tapa_caja(Tapa), length(Tapa, CT),
         Cant is CB + CT, Cant > 0, !.
-    
+
 
 % Puntuación por ronda
 puntua_jugador_ronda(Jugador, I, J, Puntuacion) :-
@@ -640,7 +657,7 @@ actualizar_patrones(Jugador, Patrones_antes, Patrones_desp) :-
 
 mover_azulejo_al_muro(Jugador, N, [Color, N], []) :-
     I is N-1, posicion_del_color_en_Muro(Color, I, J),
-    actualiza_muro(Jugador, I, J), 
+    actualiza_muro(Jugador, I, J),
     mueve_azulejos_patron_tapa(N, [Color, N]), !.
 
 mover_azulejo_al_muro(_, _, P, P).
@@ -661,7 +678,7 @@ alicatado_del_muro() :-
 
     resta_azulejos_suelo(Jugador) :-
         estado_suelo(Jugador, Puntos_negativos),
-        actualiza_puntuacion_adicional(Jugador, Puntos_negativos), 
+        actualiza_puntuacion_adicional(Jugador, Puntos_negativos),
         retract(estado_suelo(Jugador, Puntos_negativos)),
         asserta(estado_suelo(Jugador, 0)), !.
 
