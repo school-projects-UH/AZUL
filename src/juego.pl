@@ -24,6 +24,7 @@
    cant_fabricas/1,
    cant_jugadores/1,
    jugador_inicial/1,
+   estado_centro,
    estado_tapa_caja/1,
    estado_bolsa/1,
    estado_puntuaciones/2,
@@ -38,9 +39,6 @@ identificar_jugadores(2, [1, 2]).
 identificar_jugadores(3, [1, 2, 3]).
 identificar_jugadores(4, [1, 2, 3, 4]).
 
-no_fabricas(2, 5).
-no_fabricas(3, 7).
-no_fabricas(4, 9).
 
 llenar_todas_las_fabricas() :-
     estado_fabricas(Fabricas_antes),
@@ -689,7 +687,8 @@ genera_todas_las_jugadas():-
 
     cant_fabricas(CF),
     asserta(posibles_jugadas([])),
-    a(CF).
+    Fabricas_y_centro is CF + 1,
+    a(Fabricas_y_centro).
 
     a(0).
     a(N):-
@@ -759,8 +758,11 @@ color(5, negro).
 reemplazar([_|T], 0, X, [X|T]).
 reemplazar([H|T], I, X, [H|R]):- I > 0, I1 is I-1, reemplazar(T, I1, X, R).
 
-% Candidato a revisar por si falla si falla
+
 mueve_azulejos_fabrica_patron(Jugador, Id_Fabrica, Color, No_patron):-
+    cant_fabricas(CF),
+    Id_centro is CF + 1,
+    Id_Fabrica < Id_centro,
     estado_fabricas(Fabricas),
     nth1(Id_Fabrica, Fabricas, Fabrica),
     numero_azulejos_fabrica(Fabrica, Color, Cantidad),
@@ -769,6 +771,32 @@ mueve_azulejos_fabrica_patron(Jugador, Id_Fabrica, Color, No_patron):-
     reemplazar(Fabricas, Id , Fabrica_modificada, Nuevas_fabricas),
     retract(estado_fabricas(Fabricas)),
     asserta(estado_fabricas(Nuevas_fabricas)),
+    coloca_azulejos_patron(Jugador, No_patron, Color, Cantidad).
+
+
+mueve_azulejos_fabrica_patron(Jugador, Id_Fabrica, Color, No_patron):-
+    cant_fabricas(CF),
+    Id_fabrica is CF + 1,
+    estado_centro(Centro_mesa),
+    member(ficha_jugador_inicial, Centro_mesa),
+    asserta(jugador_inicial(Jugador)),
+    delete(Centro_mesa, ficha_jugador_inicial, Centro_mesa_A),
+    actualiza_suelo(Jugador, 1, _),
+    numero_azulejos_fabrica(Centro_mesa, Color, Cantidad),
+    extrae_todos_azulejos_fabrica(Centro_mesa_A, Color, Centro_mesa_despues),
+    retract(estado_centro(Centro_mesa)),
+    asserta(estado_centro(Centro_mesa_despues)),
+    coloca_azulejos_patron(Jugador, No_patron, Color, Cantidad).
+
+
+mueve_azulejos_fabrica_patron(Jugador, Id_Fabrica, Color, No_patron):-
+    cant_fabricas(CF),
+    Id_fabrica is CF + 1,
+    estado_centro(Centro_mesa),
+    numero_azulejos_fabrica(Centro_mesa, Color, Cantidad),
+    extrae_todos_azulejos_fabrica(Centro_mesa, Color, Centro_mesa_despues),
+    retract(estado_centro(Centro_mesa)),
+    asserta(estado_centro(Centro_mesa_despues)),
     coloca_azulejos_patron(Jugador, No_patron, Color, Cantidad).
 
 
@@ -805,14 +833,16 @@ actualiza_suelo(Jugador, Cantidad, 0):-
     Suma is abs(S) + Cantidad,
     Suma < 15,
     retract(estado_suelo(Jugador, S)),
-    asserta(estado_suelo(Jugador, -Suma)).
+    Suma_Neg is -Suma,
+    asserta(estado_suelo(Jugador, Suma_Neg)).
 
 actualiza_suelo(Jugador, Cantidad, Resto):-
     estado_suelo(Jugador, S),
-    Suma is abs(Cantidad - S),
+    Suma is abs(S) + Cantidad,
     Suma > 14,
     retract(estado_suelo(Jugador, S)),
-    asserta(estado_suelo(Jugador, -14)),
+    N is -14,
+    asserta(estado_suelo(Jugador, N)),
     Resto is Cantidad - (14 - abs(S)).
 
 llena_tapa_caja_color(Color, Cantidad):-
