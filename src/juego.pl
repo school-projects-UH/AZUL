@@ -5,17 +5,13 @@
 % Los jugadores estan enumerados del 1 al 4
 
 % TEST CASE
- % estado_muro(Tony, [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]]).
- % estado_muro(Gilberto, [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]]).
- % cant_jugadores(2).
- % estado_puntuaciones(1, 0).
- % estado_puntuaciones(2, 0).
- % cant_rondas(1).
- % estado_patrones(Tony, [[], [negro, 2], [azul, 1], [], []]).
- % estado_patrones(Tony, [[azul, 1], [], [gris, 1], [], []]).
- % estado_suelo(Tony, 0).
- % estado_suelo(Gilberto, 0).
- % estado_tapa_caja([]).
+ estado_muro(Tony, [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]]).
+ estado_fabricas([[rojo, rojo, amarillo], [], [gris, azul]]).
+ estado_patrones(Tony, [[], [negro, 2], [rojo, 1], [], []]).
+ estado_suelo(Tony, 0).
+ estado_tapa_caja([]).
+
+
 
 % Predicados dinamicos
 :- dynamic
@@ -141,8 +137,6 @@ llena_fabricas(Bolsa_antes, N, Fabricas, Bolsa_despues):-
         llena_fabricas_(Bolsa_intermedia, M, [Azulejos_escogidos|Fabricas_antes], Fabricas_despues, Bolsa_despues).
 
 
-
-
 mueve_azulejos_fabrica_centro(Fabrica, Centro_antes, Centro_despues)
     :- append(Centro_antes, Fabrica, Centro_despues).
 
@@ -174,6 +168,7 @@ extrae_todos_azulejos_fabrica(Fabrica, Azulejo_escogido, Fabrica) :-
 extrae_todos_azulejos_fabrica(Fabrica_antes, Azulejo_escogido, Fabrica_despues) :-
     extrae_un_azulejo_fabrica(Fabrica_antes, Azulejo_escogido, Fabrica_despues_temp), !,
     extrae_todos_azulejos_fabrica(Fabrica_despues_temp, Azulejo_escogido, Fabrica_despues).
+
 
 
 % llenar la bolsa con 100 azulejos al principio de la partida
@@ -539,17 +534,21 @@ color(5, negro).
          itera(R, Fabricas, Patrones, Muro).
 
 
-% simular un turno
 
-% simula_turno(Jugador):-
-%    itera_por_todas_las_jugadas(Jugador),
-%    mejor_solucion(F, C, P, _),
+reemplazar([_|T], 0, X, [X|T]).
+reemplazar([H|T], I, X, [H|R]):- I > 0, I1 is I-1, reemplazar(T, I1, X, R).
 
-
-% realiza_jugada(Jugador, F, C, P):-
-
-
-% mueve_azulejos_fabrica_patron(Jugador, Fabrica, Patron, Suelo):-
+% Candidato a revisar por si falla si falla
+mueve_azulejos_fabrica_patron(Jugador, Id_Fabrica, Color, No_patron):-
+    estado_fabricas(Fabricas),
+    nth1(Id_Fabrica, Fabricas, Fabrica),
+    numero_azulejos_fabrica(Fabrica, Color, Cantidad),
+    extrae_todos_azulejos_fabrica(Fabrica, Color, Fabrica_modificada),
+    Id is Id_Fabrica - 1,
+    reemplazar(Fabricas, Id , Fabrica_modificada, Nuevas_fabricas),
+    retract(estado_fabricas(Fabricas)),
+    asserta(estado_fabricas(Nuevas_fabricas)),
+    coloca_azulejos_patron(Jugador, No_patron, Color, Cantidad).
 
 
 coloca_azulejos_patron(Jugador, No_patron, Color, Cantidad):-
