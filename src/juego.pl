@@ -81,16 +81,15 @@ iniciar_juego(Cant_jugadores) :-
             llenar_todas_las_fabricas().
         
         % TEST CASE para determinar_ganadores
-        % Tres empates
-        cant_jugadores(4).
-        estado_puntuaciones(1, 2).
-        estado_puntuaciones(2, 1).
-        estado_puntuaciones(3, 2).
-        estado_puntuaciones(4, 2).
-        estado_muro(1, [[0, 0, 0, 0, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [0, 0, 1, 0, 1], [0, 0, 0, 1, 1]]).
-        estado_muro(2, [[0, 0, 0, 0, 1], [1, 1, 1, 1, 1], [0, 1, 0, 1, 1], [0, 0, 1, 0, 1], [0, 0, 0, 1, 1]]).
-        estado_muro(3, [[0, 0, 0, 0, 1], [1, 1, 1, 1, 1], [0, 1, 0, 1, 1], [0, 0, 1, 0, 1], [0, 0, 0, 1, 1]]).
-        estado_muro(4, [[0, 0, 0, 0, 1], [1, 1, 1, 1, 1], [0, 1, 0, 1, 1], [0, 0, 1, 0, 1], [0, 0, 0, 1, 1]]).
+        % cant_jugadores(4).
+        % estado_puntuaciones(1, 2).
+        % estado_puntuaciones(2, 1).
+        % estado_puntuaciones(3, 2).
+        % estado_puntuaciones(4, 2).
+        % estado_muro(1, [[0, 0, 0, 0, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [0, 0, 1, 0, 1], [0, 0, 0, 1, 1]]).
+        % estado_muro(2, [[0, 0, 0, 0, 1], [1, 1, 1, 1, 1], [0, 1, 0, 1, 1], [0, 0, 1, 0, 1], [0, 0, 0, 1, 1]]).
+        % estado_muro(3, [[0, 0, 0, 0, 1], [1, 1, 1, 1, 1], [0, 1, 0, 1, 1], [0, 0, 1, 0, 1], [0, 0, 0, 1, 1]]).
+        % estado_muro(4, [[0, 0, 0, 0, 1], [1, 1, 1, 1, 1], [0, 1, 0, 1, 1], [0, 0, 1, 0, 1], [0, 0, 0, 1, 1]]).
 
         determinar_ganadores(Ganadores) :-
             cant_jugadores(Cant_jugadores),
@@ -455,9 +454,25 @@ calcular_todos_los_puntos_adicionales() :-
         calcular_puntos_adicionales(Otro_jugador).
 
 % Comprobar si la partida finalizó
-fin_partida(Termina) :-
+% TEST CASE
+% cant_jugadores(3).
+% estado_puntuaciones(1, 2).
+% estado_puntuaciones(2, 1).
+% estado_puntuaciones(3, 2).
+% estado_puntuaciones(4, 2).
+% estado_muro(1, [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]]).
+% estado_muro(1, [[0, 0, 0, 0, 1], [1, 1, 0, 1, 1], [1, 0, 1, 1, 1], [0, 0, 1, 0, 1], [0, 0, 0, 1, 1]]).
+% estado_muro(2, [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]]).
+% estado_muro(3, [[0, 0, 0, 0, 1], [1, 1, 1, 1, 1], [0, 1, 0, 1, 1], [0, 0, 1, 0, 1], [0, 0, 0, 1, 1]]).
+% estado_muro(3, [[0, 0, 0, 0, 1], [1, 1, 0, 1, 1], [0, 1, 0, 1, 1], [0, 0, 1, 0, 1], [0, 0, 0, 1, 1]]).
+% estado_muro(3, [[0, 0, 0, 0, 1], [1, 1, 0, 1, 1], [0, 1, 0, 1, 1], [0, 0, 1, 0, 1], [0, 0, 0, 1, 1]]).
+% estado_bolsa([]).
+% estado_tapa_caja([]).
+
+fin_partida(T2) :-
     cant_jugadores(Ultimo_jugador),
-    comprobar_filas(Ultimo_jugador, 0, Termina).
+    comprobar_filas(Ultimo_jugador, 0, T1),
+    comprobar_cantidad_azuelejos(T2), Termina is max(T1, T2).
 
     comprobar_filas(0, _, 0) :- !.
     comprobar_filas(Jugador, 0, Termina) :-
@@ -466,6 +481,16 @@ fin_partida(Termina) :-
         Otro_jugador is Jugador - 1, !,
         comprobar_filas(Otro_jugador, Puntos, Termina).
     comprobar_filas(_, _, 1) :- !.
+
+    comprobar_cantidad_azuelejos(1) :- 
+        estado_bolsa(Bolsa), length(Bolsa, 0),
+        estado_tapa_caja(Tapa), length(Tapa, 0), !.
+    
+    comprobar_cantidad_azuelejos(0) :- 
+        estado_bolsa(Bolsa), length(Bolsa, CB),
+        estado_tapa_caja(Tapa), length(Tapa, CT),
+        Cant is CB + CT, Cant > 0, !.
+    
 
 % Puntuación por ronda
 puntua_jugador_ronda(Jugador, I, J, Puntuacion) :-
