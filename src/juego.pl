@@ -66,14 +66,14 @@ iniciar_juego(Cant_jugadores) :-
         jugar(0) :-
             ofertas_de_factoria(),
             alicatado_del_muro(),
-            prepara_siguente_ronda(),
+            prepara_siguiente_ronda(),
             fin_partida(Termina), !,
             jugar(Termina), 
             !.
         
         % Poner la lógica de la fase de ofertas de factoria como objetivo de este predicado
         ofertas_de_factoria().
-        prepara_siguente_ronda() :-
+        prepara_siguiente_ronda() :-
             llenar_todas_las_fabricas().
         
         % TEST CASE para determinar_ganadores
