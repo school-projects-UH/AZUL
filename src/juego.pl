@@ -4,14 +4,6 @@
 
 % Los jugadores estan enumerados del 1 al 4
 
-% TEST CASE
- estado_muro(Tony, [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]]).
- estado_fabricas([[rojo, rojo, amarillo], [], [gris, azul]]).
- estado_patrones(Tony, [[], [negro, 2], [rojo, 1], [], []]).
- estado_suelo(Tony, 0).
- estado_tapa_caja([]).
-
-
 
 % Predicados dinamicos
 :- dynamic
