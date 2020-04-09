@@ -59,7 +59,7 @@ llenar_todas_las_fabricas() :-
     asserta(estado_fabricas(Fabricas_despues)).
 
 iniciar_juego(Cant_jugadores) :-
-    prepara_partida(Cant_jugadores).
+    prepara_partida(Cant_jugadores),
     jugar(0),
     calcular_todos_los_puntos_adicionales(),
     determinar_ganadores(Ganadores),
@@ -690,7 +690,8 @@ genera_todas_las_jugadas():-
 
     cant_fabricas(CF),
     asserta(posibles_jugadas([])),
-    a(CF).
+    Fabricas_y_centro is CF + 1,
+    a(Fabricas_y_centro).
 
     a(0).
     a(N):-
