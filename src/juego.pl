@@ -24,7 +24,7 @@
    cant_fabricas/1,
    cant_jugadores/1,
    jugador_inicial/1,
-   estado_centro,
+   estado_centro/1,
    estado_tapa_caja/1,
    estado_bolsa/1,
    estado_puntuaciones/2,
@@ -62,15 +62,17 @@ iniciar_juego(Cant_jugadores) :-
         % jugar(Termino_la_partida)
         jugar(1) :- !.
         jugar(0) :-
+            prepara_siguiente_ronda(),
             ofertas_de_factoria(),
             alicatado_del_muro(),
             prepara_siguiente_ronda(),
             fin_partida(Termina), !,
-            jugar(Termina), 
+            jugar(Termina),
             !.
         
         % Poner la lógica de la fase de ofertas de factoria como objetivo de este predicado
         ofertas_de_factoria().
+
         prepara_siguiente_ronda() :-
             llenar_todas_las_fabricas().
         
@@ -210,6 +212,7 @@ decidir_jugador_inicial(Jugadores, Jugador_escogido):-
 prepara_partida(N):-
     identificar_jugadores(N, Jugadores),
     no_fabricas(N, CF),
+    genera_todas_las_jugadas(CF),
     asserta(cant_jugadores(N)),
     asserta(cant_fabricas(CF)),
     llena_bolsa(),
@@ -223,6 +226,7 @@ prepara_partida(N):-
     asserta(jugador_inicial(JI)),
 
     % Inicializando predicados dinamicos faltantes
+    asserta(estado_centro([])),
     asserta(estado_tapa_caja([])),
     asserta(mejor_solucion([])),
     asserta(posibles_jugadas([])),
