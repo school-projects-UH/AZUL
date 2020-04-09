@@ -216,9 +216,9 @@ prepara_partida(N):-
     inicializar_puntuaciones(Jugadores),
     inicializar_fabricas(Fabricas),
     asserta(estado_fabricas(Fabricas)),
-    inicializar_muros(Jugadores, N),
-    inicializar_suelos(Jugadores, N),
-    inicializar_patrones(Jugadores, N),
+    inicializar_muros(Jugadores),
+    inicializar_suelos(Jugadores),
+    inicializar_patrones(Jugadores),
     decidir_jugador_inicial(Jugadores, JI),
     asserta(jugador_inicial(JI)),
 
@@ -240,23 +240,20 @@ prepara_partida(N):-
     inicializar_fabricas([[]|Rest_Fabricas]):-
         inicializar_fabricas(Rest_Fabricas).
 
-    inicializar_muros([], 0).
-    inicializar_muros([J| Rest_jugadores], N):-
-        M is N - 1,
+    inicializar_muros([]).
+    inicializar_muros([J| Rest_jugadores]):-
         asserta(estado_muro(J, [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]])),
-        inicializar_muros(Rest_jugadores, M).
+        inicializar_muros(Rest_jugadores).
 
-    inicializar_suelos([], 0).
-    inicializar_suelos([J| Rest_jugadores], N):-
-        M is N - 1,
-        asserta(estado_suelo(0, 0, J, [0, 0, 0, 0, 0, 0, 0])),
-        inicializar_suelos(Rest_jugadores, M).
+    inicializar_suelos([]).
+    inicializar_suelos([J| Rest_jugadores]):-
+        asserta(estado_suelo(J, 0)),
+        inicializar_suelos(Rest_jugadores).
 
-    inicializar_patrones([], 0).
-    inicializar_patrones([J| Rest_jugadores], N):-
-        M is N - 1,
+    inicializar_patrones([]).
+    inicializar_patrones([J| Rest_jugadores]):-
         asserta(estado_patrones(J, [[], [], [], [], []])),
-        inicializar_patrones(Rest_jugadores, M).
+        inicializar_patrones(Rest_jugadores).
 
 
 % sacar un azulejo al azar de la bolsa
@@ -815,3 +812,11 @@ llena_tapa_caja_color(Color, Cantidad):-
     llena_bolsa_color_(Tapa_caja, Color, Cantidad, Tapa_despues),
     retract(estado_tapa_caja(Tapa_caja)),
     asserta(estado_tapa_caja(Tapa_despues)).
+
+% siguiente_jugador(Jugador_actual, Jugador_siguiente)
+siguiente_jugador(1, 2).
+siguiente_jugador(2, 3) :- cant_jugadores(C), C > 2.
+siguiente_jugador(2, 1) :- cant_jugadores(2).
+siguiente_jugador(3, 4) :- cant_jugadores(4).
+siguiente_jugador(3, 1) :- cant_jugadores(3).
+siguiente_jugador(4, 1).
