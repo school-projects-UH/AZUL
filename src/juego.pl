@@ -65,19 +65,55 @@ iniciar_juego(Cant_jugadores) :-
     !.
 
         % jugar(Termino_la_partida)
-        jugar(1) :- !.
+
         jugar(0) :-
+            estado_bolsa(Bolsa),
+            length(Bolsa, Cant_Azulejos), Cant_Azulejos > 0,
             prepara_siguiente_ronda(),
             ofertas_de_factoria(),
             alicatado_del_muro(),
-            prepara_siguiente_ronda(),
             fin_partida(Termina), !,
             jugar(Termina),
             !.
 
-        % Poner la lógica de la fase de ofertas de factoria como objetivo de este predicado
-        ofertas_de_factoria().
+        jugar(1) :- !.
 
+
+        ofertas_de_factoria():-
+            jugador_inicial(JI),
+            simula_fase1(JI).
+
+
+        quedan_azulejos_fabricas([], "NO").
+        quedan_azulejos_fabricas([[]|R], Resp):-
+            quedan_azulejos_fabricas(R, Resp).
+        quedan_azulejos_fabricas(_, "SI").
+
+
+        simula_fase1(Jugador_inicial):-
+            estado_fabricas(Fabricas),
+            estado_centro(Centro),
+            quedan_azulejos_fabricas([Fabricas|Centro] , "NO").
+
+        simula_fase1(Jugador_inicial):-
+            estado_fabricas(Fabricas),
+            estado_centro(Centro),
+            quedan_azulejos_fabricas([Fabricas|Centro], "SI"),
+            simula_turno(Jugador_inicial),
+            siguiente_jugador(Jugador_inicial, Sgte),
+            simula_fase1(Sgte).
+
+
+        simula_turno(Jugador):-
+            write_state("Juega: ", Jugador),
+            itera_por_todas_las_jugadas(Jugador),
+            mejor_solucion(F, C, P),
+            mueve_azulejos_fabrica_patron(Jugador, F, C, P),
+            write_state("Tablero del jugador ", Jugador),
+            estado_muro(Jugador, Muro), estado_patrones(Jugador, Patrones), estado_suelo(Jugador, Suelo),
+            write_state("Patrones: ", Patrones),
+            write_state("Muro: ", Muro),
+            write_state("Suelo: ", Suelo).
 
         prepara_siguiente_ronda() :-
             retract(estado_centro([])),
@@ -255,8 +291,6 @@ prepara_partida(N):-
     asserta(posibles_jugadas([])),
     asserta(cant_rondas(1)),
 
-    % Añadiendo primeros azulejos a las fabricas
-    llenar_todas_las_fabricas(), !.
 
     inicializar_puntuaciones([]).
     inicializar_puntuaciones([J|Rest_Jugadores]):-
