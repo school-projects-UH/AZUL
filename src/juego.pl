@@ -19,7 +19,7 @@
 
 % Predicados dinamicos
 :- dynamic
-   mejor_solucion/1,
+   mejor_solucion/4,
    posibles_jugadas/1,
    cant_fabricas/1,
    cant_jugadores/1,
@@ -62,8 +62,13 @@ iniciar_juego(Cant_jugadores) :-
     genera_todas_las_jugadas(),
     jugar(0),
     calcular_todos_los_puntos_adicionales(),
-    determinar_ganadores(_),
+    determinar_ganadores(Ganadores),
+    write("Fin de la partida"), nl(),
+    imprime_ganadores(Ganadores),
     !.
+
+    imprime_ganadores([G]) :- write("El Ganador es ", G), nl(), !.
+    imprime_ganadores(G) :- write("Los Ganadores son ", G), nl(), !.
 
         % jugar(Termino_la_partida)
 
@@ -72,13 +77,32 @@ iniciar_juego(Cant_jugadores) :-
             length(Bolsa, Cant_Azulejos), Cant_Azulejos > 0,
             prepara_siguiente_ronda(),
             ofertas_de_factoria(),
+            write("Alicatando los muros"), nl(),
             alicatado_del_muro(),
+            estado_tras_el_alicatado_del_muro(),
             fin_partida(Termina), !,
             jugar(Termina),
             !.
 
         jugar(1) :- !.
 
+        estado_tras_el_alicatado_del_muro() :-
+            cant_jugadores(N),
+            estado_del_Jugador(1).
+        
+        estado_del_Jugador(J) :- cant_jugadores(N), N > J, !.
+        estado_del_Jugador(Jugador) :- 
+            write_state("Tablero del jugador ", Jugador),
+            estado_muro(Jugador, Muro), estado_patrones(Jugador, Patrones), 
+            estado_suelo(Jugador, Suelo), estado_puntuaciones(Jugador, Puntuacion),
+            write_state("Patrones: ", Patrones),
+            write_state("Muro: ", Muro),
+            write_state("Suelo: ", Suelo),
+            write_state("Puntuacion: ", Puntuacion),
+            Siguiente_jugador is Jugador + 1, !, 
+            estado_del_Jugador(siguiente_jugador), 
+            !.
+        
 
         ofertas_de_factoria():-
             jugador_inicial(JI),
@@ -271,7 +295,6 @@ no_fabricas(4, 9).
 prepara_partida(N):-
     identificar_jugadores(N, Jugadores),
     no_fabricas(N, CF),
-    genera_todas_las_jugadas(CF),
     asserta(cant_jugadores(N)),
     asserta(cant_fabricas(CF)),
     llena_bolsa(),
@@ -287,9 +310,8 @@ prepara_partida(N):-
     % Inicializando predicados dinamicos faltantes
     asserta(estado_centro([])),
     asserta(estado_tapa_caja([])),
-    asserta(mejor_solucion([])),
     asserta(posibles_jugadas([])),
-    asserta(cant_rondas(1)),
+    asserta(cant_rondas(1)).
 
 
     inicializar_puntuaciones([]).
