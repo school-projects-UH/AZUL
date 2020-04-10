@@ -76,20 +76,23 @@ iniciar_juego(Cant_jugadores) :-
 
 
         prepara_siguiente_ronda() :-
-
-            asserta(estado_centro([])),
-            llena_bolsa(),
-            asserta(cant_fabricas(3)),
-            asserta(estado_fabricas([[], [], []])),
             retract(estado_centro([])),
             asserta(estado_centro([ficha_jugador_inicial])),
             llenar_todas_las_fabricas(),
             estado_fabricas(Fabricas),
-            write_state(Fabricas), write("FIN"), nl().
+            estado_centro(Centro),
+            cant_rondas(Rondas),
+            jugador_inicial(JI),
 
-            write_state(State):-
+            write_state("Ronda #", Rondas),
+            write_state("Fabricas: ", Fabricas),
+            write_state("Centro de la mesa:", Centro),
+            write_state("Jugador Inicial: ", JI).
+
+
+            write_state(Name, State):-
                 open("output.txt",append,Stream),
-                write(Stream,State),  nl(Stream),
+                write(Stream, Name), write(Stream, State), nl(Stream),
                 close(Stream).
 
         % TEST CASE para determinar_ganadores
