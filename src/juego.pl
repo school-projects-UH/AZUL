@@ -19,7 +19,7 @@
 
 % Predicados dinamicos
 :- dynamic
-   mejor_solucion/1,
+   mejor_solucion/4,
    posibles_jugadas/1,
    cant_fabricas/1,
    cant_jugadores/1,
@@ -107,7 +107,7 @@ iniciar_juego(Cant_jugadores) :-
         simula_turno(Jugador):-
             write_state("Juega: ", Jugador),
             itera_por_todas_las_jugadas(Jugador),
-            mejor_solucion(F, C, P),
+            mejor_solucion(F, C, P, _),
             mueve_azulejos_fabrica_patron(Jugador, F, C, P),
             write_state("Tablero del jugador ", Jugador),
             estado_muro(Jugador, Muro), estado_patrones(Jugador, Patrones), estado_suelo(Jugador, Suelo),
@@ -271,9 +271,10 @@ decidir_jugador_inicial(Jugadores, Jugador_escogido):-
 prepara_partida(N):-
     identificar_jugadores(N, Jugadores),
     no_fabricas(N, CF),
-    genera_todas_las_jugadas(CF),
     asserta(cant_jugadores(N)),
     asserta(cant_fabricas(CF)),
+    genera_todas_las_jugadas(),
+   
     llena_bolsa(),
     inicializar_puntuaciones(Jugadores),
     inicializar_fabricas(Fabricas),
@@ -288,8 +289,15 @@ prepara_partida(N):-
     asserta(estado_centro([])),
     asserta(estado_tapa_caja([])),
     asserta(mejor_solucion([])),
-    asserta(posibles_jugadas([])),
     asserta(cant_rondas(1)),
+
+    estado_fabricas(Fabricas),
+    estado_centro(Centro),
+
+    write_state("No. Jugadores: ", N),
+    write_state("No. Fábricas: ", CF),
+    write_state("Fabricas: ", Fabricas),
+    write_state("Centro de la mesa: ", Centro).
 
 
     inicializar_puntuaciones([]).
@@ -404,7 +412,6 @@ extrae_todos_azulejos_fabrica(Fabrica_antes, Azulejo_escogido, Fabrica_despues) 
 % llenar la bolsa con 100 azulejos al principio de la partida
 
 llena_bolsa():-
-    write("llena_bolsa"), nl(),
     llena_bolsa_(Bolsa),
     asserta(estado_bolsa(Bolsa)).
 

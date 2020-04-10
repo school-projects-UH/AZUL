@@ -1,0 +1,4 @@
+No. Jugadores: 4
+No. Fábricas: 9
+Fabricas: []
+Centro de la mesa: []
