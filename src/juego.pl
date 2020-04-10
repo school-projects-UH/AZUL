@@ -356,6 +356,10 @@ llena_fabricas(Bolsa_antes, N, Fabricas_antes, Fabricas_despues, Bolsa_despues):
     llena_fabricas_(Bolsa_antes, N, [], Fabricas_despues, Bolsa_despues).
 
     llena_fabricas_(Bolsa_antes, 0, Fabricas_antes, Fabricas_antes, Bolsa_antes).
+    llena_fabricas_(Bolsa_antes, N, Fabricas_antes, [Bolsa_antes|Fabricas_antes], []):-
+        write("llena_fabricas_"), write(N), write(Fabricas_antes), nl(),
+        length(Bolsa_antes, Cant_Azulejos),
+        Cant_Azulejos < 5.
     llena_fabricas_(Bolsa_antes, N, Fabricas_antes, Fabricas_despues, Bolsa_despues):-
         write("llena_fabricas_"), write(N), write(Fabricas_antes), nl(),
         extrae_4_azulejos_bolsa(Bolsa_antes, Azulejos_escogidos, Bolsa_intermedia),
