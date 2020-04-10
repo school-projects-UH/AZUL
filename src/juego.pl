@@ -34,6 +34,10 @@
    estado_patrones/2,
    cant_rondas/1.
 
+no_fabricas(2, 5).
+no_fabricas(3, 7).
+no_fabricas(4, 9).
+
 % identificar_jugadores(Cant_jugadores, Lista_identificadores)
 identificar_jugadores(2, [1, 2]).
 identificar_jugadores(3, [1, 2, 3]).
@@ -41,7 +45,7 @@ identificar_jugadores(4, [1, 2, 3, 4]).
 
 
 llenar_todas_las_fabricas() :-
-    print("LLenar_todas_las_fabricas"), nl(),
+    write("LLenar_todas_las_fabricas"), nl(),
     estado_fabricas(Fabricas_antes),
     estado_bolsa(Bolsa_antes),
     cant_fabricas(N),
@@ -64,6 +68,7 @@ iniciar_juego(Cant_jugadores) :-
         % jugar(Termino_la_partida)
         jugar(1) :- !.
         jugar(0) :-
+            prepara_siguiente_ronda(),
             ofertas_de_factoria(),
             alicatado_del_muro(),
             prepara_siguiente_ronda(),
@@ -264,6 +269,7 @@ no_fabricas(4, 9).
 prepara_partida(N):-
     identificar_jugadores(N, Jugadores),
     no_fabricas(N, CF),
+    genera_todas_las_jugadas(CF),
     asserta(cant_jugadores(N)),
     asserta(cant_fabricas(CF)),
     llena_bolsa(),
@@ -348,11 +354,12 @@ extrae_4_azulejos_bolsa(Bolsa_antes, [A1, A2, A3, A4], Bolsa_despues):-
 % Por cada fabrica, sacar 4 azulejos y colocarlos en la misma
 
 llena_fabricas(Bolsa_antes, N, Fabricas_antes, Fabricas_despues, Bolsa_despues):-
+    write("llena_fabricas"), nl(),
     llena_fabricas_(Bolsa_antes, N, [], Fabricas_despues, Bolsa_despues).
 
     llena_fabricas_(Bolsa_antes, 0, Fabricas_antes, Fabricas_antes, Bolsa_antes).
     llena_fabricas_(Bolsa_antes, N, Fabricas_antes, Fabricas_despues, Bolsa_despues):-
-        print("Entering llena_fabricas"), nl(),
+        write("llena_fabricas_"), write(N), write(Fabricas_antes), nl(),
         extrae_4_azulejos_bolsa(Bolsa_antes, Azulejos_escogidos, Bolsa_intermedia),
         M is N - 1,
         llena_fabricas_(Bolsa_intermedia, M, [Azulejos_escogidos|Fabricas_antes], Fabricas_despues, Bolsa_despues).
@@ -395,6 +402,7 @@ extrae_todos_azulejos_fabrica(Fabrica_antes, Azulejo_escogido, Fabrica_despues) 
 % llenar la bolsa con 100 azulejos al principio de la partida
 
 llena_bolsa():-
+    write("llena_bolsa"), nl(),
     llena_bolsa_(Bolsa),
     print(""), print(Bolsa), nl(),
     asserta(estado_bolsa(Bolsa)).
