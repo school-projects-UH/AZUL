@@ -1,4 +1,0 @@
-Ronda #1
-Fabricas: [[rojo,rojo,amarillo,rojo],[azul,negro,gris,gris],[negro,negro,negro,gris]]
-Centro de la mesa:[ficha_jugador_inicial]
-Jugador Inicial: Gilberto
