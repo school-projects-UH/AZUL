@@ -66,53 +66,55 @@ iniciar_juego(Cant_jugadores) :-
     !.
 
         % jugar(Termino_la_partida)
-        jugar(1) :- !.
+
         jugar(0) :-
+            estado_bolsa(Bolsa),
+            length(Bolsa, Cant_Azulejos), Cant_Azulejos > 0,
             prepara_siguiente_ronda(),
             ofertas_de_factoria(),
             alicatado_del_muro(),
-            prepara_siguiente_ronda(),
             fin_partida(Termina), !,
             jugar(Termina),
             !.
 
-        % Poner la lógica de la fase de ofertas de factoria como objetivo de este predicado
-        ofertas_de_factoria() :-
-            % coger_azueljos(Quedan) :- !.
-            coger_azulejos(0) :- !.
-            coger_azulejos(1) :-
-                % Lógica de coger azulejos y mover a los patrones y/o suelo
-                coger_azulejos(Quedan), !,
-                coger_azulejos(Quedan).
-        
+        jugar(1) :- !.
 
-        % TEST CASE
-        % estado_centro([]).
-        % estado_fabricas([[], [], [], [], []]).
-        
-        quedan_azulejos(Q) :-
-            quedan_azulejos_en_centro(Q1),
-            quedan_azulejos_en_fabricas(Q2),
-            Q is max(Q1, Q2), !.
 
-        quedan_azulejos_en_centro(Q) :-
-            estado_centro(Centro),
-            quedan_azulejos_en_centro_(Centro, Q), !.
+        ofertas_de_factoria():-
+            jugador_inicial(JI),
+            simula_fase1(JI).
 
-        quedan_azulejos_en_fabricas(Q) :- 
+
+        quedan_azulejos_fabricas([], "NO").
+        quedan_azulejos_fabricas([[]|R], Resp):-
+            quedan_azulejos_fabricas(R, Resp).
+        quedan_azulejos_fabricas(_, "SI").
+
+
+        simula_fase1(Jugador_inicial):-
             estado_fabricas(Fabricas),
-            quedan_azulejos_en_fabricas_(Fabricas, Q), !.
+            estado_centro(Centro),
+            quedan_azulejos_fabricas([Fabricas|Centro] , "NO").
 
-            % quedan_azulejos_en(Centro, Quedan)
-            quedan_azulejos_en_centro_([], 0) :- !.
-            quedan_azulejos_en_centro_(_, 1) :- !.
+        simula_fase1(Jugador_inicial):-
+            estado_fabricas(Fabricas),
+            estado_centro(Centro),
+            quedan_azulejos_fabricas([Fabricas|Centro], "SI"),
+            simula_turno(Jugador_inicial),
+            siguiente_jugador(Jugador_inicial, Sgte),
+            simula_fase1(Sgte).
 
-            quedan_azulejos_en_fabricas_([[], [], [], [], []], 0) :- !.
-            quedan_azulejos_en_fabricas_([[], [], [], [], [], [], []], 0) :- !.
-            quedan_azulejos_en_fabricas_([[], [], [], [], [], [], [], [], []], 0) :- !.
-            quedan_azulejos_en_fabricas_(_, 1) :- !.
 
-
+        simula_turno(Jugador):-
+            write_state("Juega: ", Jugador),
+            itera_por_todas_las_jugadas(Jugador),
+            mejor_solucion(F, C, P),
+            mueve_azulejos_fabrica_patron(Jugador, F, C, P),
+            write_state("Tablero del jugador ", Jugador),
+            estado_muro(Jugador, Muro), estado_patrones(Jugador, Patrones), estado_suelo(Jugador, Suelo),
+            write_state("Patrones: ", Patrones),
+            write_state("Muro: ", Muro),
+            write_state("Suelo: ", Suelo).
 
         prepara_siguiente_ronda() :-
 
@@ -289,10 +291,6 @@ prepara_partida(N):-
     asserta(posibles_jugadas([])),
     asserta(cant_rondas(1)),
 
-    % Añadiendo primeros azulejos a las fabricas
-    llenar_todas_las_fabricas(), 
-    % genera_todas_las_jugadas(CF),
-    !.
 
     inicializar_puntuaciones([]).
     inicializar_puntuaciones([J|Rest_Jugadores]):-
